@@ -1,0 +1,39 @@
+{
+  "applications": ["cliente"],
+  "changelogDate": "20221124022608",
+  "clientRootFolder": "cliente",
+  "databaseType": "mongodb",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "telefono",
+  "fields": [
+    {
+      "fieldName": "codigoArea",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "nroTelefono",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "tipo",
+      "fieldType": "String"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "microserviceName": "cliente",
+  "name": "Telefono",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "cliente",
+      "otherEntityRelationshipName": "telefono",
+      "ownerSide": true,
+      "relationshipName": "cliente",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "service": "no"
+}

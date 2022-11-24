@@ -1,0 +1,43 @@
+{
+  "applications": ["cliente"],
+  "changelogDate": "20221124022508",
+  "clientRootFolder": "cliente",
+  "databaseType": "mongodb",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "cliente",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "apellido",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "direccion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "activo",
+      "fieldType": "Integer"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "microserviceName": "cliente",
+  "name": "Cliente",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "telefono",
+      "otherEntityRelationshipName": "cliente",
+      "ownerSide": false,
+      "relationshipName": "telefono",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "service": "no"
+}
