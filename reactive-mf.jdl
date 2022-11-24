@@ -1,0 +1,116 @@
+application {
+  config {
+    baseName gateway
+    reactive true
+    packageName com.ingenieria.gateway
+    applicationType gateway
+    authenticationType jwt
+    buildTool gradle
+    clientFramework react
+    prodDatabaseType postgresql
+    serviceDiscoveryType consul
+    testFrameworks [cypress]
+    microfrontends [factura, cliente]
+  }
+}
+
+application {
+  config {
+    baseName factura
+    reactive true
+    packageName com.ingenieria.factura
+    applicationType microservice
+    authenticationType jwt
+    buildTool gradle
+    clientFramework react
+    databaseType sql
+    devDatabaseType mysql
+    prodDatabaseType mysql
+    enableHibernateCache false
+    serverPort 8081
+    serviceDiscoveryType consul
+    testFrameworks [cypress]
+  }
+  entities Factura, DetalleFactura, Producto
+}
+
+application {
+  config {
+    baseName cliente
+    reactive true
+    packageName com.ingenieria.cliente
+    applicationType microservice
+    authenticationType jwt
+    buildTool gradle
+    clientFramework react
+    databaseType mongodb
+    devDatabaseType mongodb
+    prodDatabaseType mongodb
+    enableHibernateCache false
+    serverPort 8082
+    serviceDiscoveryType consul
+    testFrameworks [cypress]
+  }
+  entities Cliente, Telefono
+}
+
+entity Telefono {
+	codigoArea Integer,
+    nroTelefono Integer,
+    tipo String,
+}
+
+entity Cliente {
+    nombre String,
+    apellido String,
+    direccion String,
+    activo Integer
+}
+
+entity Factura {
+    fecha LocalDate,
+    totalSinIva Double,
+    iva Double,
+    totalConIva Double,
+}
+
+entity DetalleFactura {
+    cantidad Float,
+}
+
+entity Producto {
+    marca String,
+    nombre String,
+    descripcion String,
+    precio Float,
+    stock Integer
+}
+
+
+relationship OneToOne {
+  Telefono to Cliente
+}
+
+relationship ManyToOne {
+	DetalleFactura to Producto
+  DetalleFactura to Factura
+}
+
+
+deployment {
+  deploymentType docker-compose
+  serviceDiscoveryType consul
+  appsFolders [gateway, factura, cliente]
+  dockerRepositoryName "mraible"
+}
+
+deployment {
+  deploymentType kubernetes
+  appsFolders [gateway, factura, cliente]
+  clusteredDbApps [store]
+  kubernetesNamespace demo
+  kubernetesUseDynamicStorage true
+  kubernetesStorageClassName ""
+  serviceDiscoveryType consul
+  dockerRepositoryName "mraible"
+}

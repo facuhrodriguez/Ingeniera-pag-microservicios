@@ -1,0 +1,58 @@
+{
+  "generator-jhipster": {
+    "applicationIndex": 2,
+    "applicationType": "gateway",
+    "authenticationType": "jwt",
+    "baseName": "gateway",
+    "blueprints": [],
+    "buildTool": "gradle",
+    "cacheProvider": "no",
+    "clientFramework": "react",
+    "clientPackageManager": "npm",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1669256654938,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "devServerPort": 9062,
+    "dtoSuffix": "DTO",
+    "enableGradleEnterprise": false,
+    "enableHibernateCache": false,
+    "enableSwaggerCodegen": false,
+    "enableTranslation": true,
+    "entitySuffix": "",
+    "gradleEnterpriseHost": "",
+    "jhiPrefix": "jhi",
+    "jhipsterVersion": "7.9.3",
+    "jwtSecretKey": "OTI0NGIxOTY2OWU3OTc0YmU3YjZjNzVkYmMxNzM4NTA0NGMyYWFlOTc3Y2QwNjM5Zjk2YzJlODc0NzdlZDRmOWUwZGMzZjk5ODBjZTAxZDNmNmE4MzQ1NDMzYWVjMGUyYmNjNTE4ZDNlYWRjNTZkNjc0ODFkZWI5Y2NjZDcyZWI=",
+    "languages": ["en"],
+    "messageBroker": false,
+    "microfrontends": [
+      {
+        "baseName": "factura"
+      },
+      {
+        "baseName": "cliente"
+      }
+    ],
+    "monorepository": true,
+    "nativeLanguage": "en",
+    "otherModules": [],
+    "packageFolder": "com/ingenieria/gateway",
+    "packageName": "com.ingenieria.gateway",
+    "pages": [],
+    "prodDatabaseType": "postgresql",
+    "reactive": true,
+    "searchEngine": false,
+    "serverPort": "8080",
+    "serviceDiscoveryType": "consul",
+    "skipCheckLengthOfIdentifier": false,
+    "skipClient": false,
+    "skipCommitHook": true,
+    "skipFakeData": false,
+    "skipUserManagement": false,
+    "testFrameworks": ["cypress"],
+    "websocket": false,
+    "withAdminUi": true
+  }
+}

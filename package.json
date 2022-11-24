@@ -1,0 +1,39 @@
+{
+  "workspaces": {
+    "packages": [
+      "factura",
+      "cliente",
+      "gateway"
+    ]
+  },
+  "scripts": {
+    "backend:build-cache": "concurrently npm:backend:build-cache:factura npm:backend:build-cache:cliente npm:backend:build-cache:gateway",
+    "backend:build-cache:cliente": "npm run backend:build-cache --workspace cliente --if-present",
+    "backend:build-cache:factura": "npm run backend:build-cache --workspace factura --if-present",
+    "backend:build-cache:gateway": "npm run backend:build-cache --workspace gateway --if-present",
+    "ci:backend:test": "npm run ci:backend:test --workspaces --if-present",
+    "ci:e2e:package": "npm run ci:docker:build --workspaces --if-present && npm run java:docker --workspaces --if-present",
+    "ci:e2e:prepare": "npm run docker-compose",
+    "ci:e2e:run": "npm run e2e:headless --workspaces --if-present",
+    "ci:e2e:teardown": "docker-compose -f docker-compose/docker-compose.yml down -v",
+    "ci:frontend:test": "npm run ci:frontend:test --workspaces --if-present",
+    "docker-compose": "docker-compose -f docker-compose/docker-compose.yml up -d",
+    "java:docker": "concurrently npm:java:docker:factura npm:java:docker:cliente npm:java:docker:gateway",
+    "java:docker:arm64": "concurrently npm:java:docker:arm64:factura npm:java:docker:arm64:cliente npm:java:docker:arm64:gateway",
+    "java:docker:arm64:cliente": "npm run java:docker:arm64 --workspace cliente --if-present",
+    "java:docker:arm64:factura": "npm run java:docker:arm64 --workspace factura --if-present",
+    "java:docker:arm64:gateway": "npm run java:docker:arm64 --workspace gateway --if-present",
+    "java:docker:cliente": "npm run java:docker --workspace cliente --if-present",
+    "java:docker:factura": "npm run java:docker --workspace factura --if-present",
+    "java:docker:gateway": "npm run java:docker --workspace gateway --if-present",
+    "watch": "concurrently npm:watch:factura npm:watch:cliente npm:watch:gateway",
+    "watch:cliente": "npm run watch --workspace cliente --if-present",
+    "watch:factura": "npm run watch --workspace factura --if-present",
+    "watch:gateway": "npm run watch --workspace gateway --if-present",
+    "webapp:test": "npm run webapp:test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "7.3.0",
+    "rxjs": "7.5.6"
+  }
+}
