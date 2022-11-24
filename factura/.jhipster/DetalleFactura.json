@@ -1,0 +1,36 @@
+{
+  "applications": ["factura"],
+  "changelogDate": "20221124022509",
+  "clientRootFolder": "factura",
+  "databaseType": "sql",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "detalle_factura",
+  "fields": [
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Float"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "microserviceName": "factura",
+  "name": "DetalleFactura",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "producto",
+      "otherEntityRelationshipName": "detalleFactura",
+      "relationshipName": "producto",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "factura",
+      "otherEntityRelationshipName": "detalleFactura",
+      "relationshipName": "factura",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}
