@@ -43,7 +43,7 @@ Run the following commands in two separate terminals to create a blissful develo
 auto-refreshes when files change on your hard drive.
 
 ```
-./gradlew -x webapp
+gradlew -x webapp
 npm start
 ```
 
@@ -136,7 +136,7 @@ docker-compose -f src/main/docker/jhipster-control-center.yml up
 To build the final jar and optimize the cliente application for production, run:
 
 ```
-./gradlew -Pprod clean bootJar
+gradlew -Pprod clean bootJar
 ```
 
 This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
@@ -155,7 +155,7 @@ Refer to [Using JHipster in production][] for more details.
 To package your application as a war in order to deploy it to an application server, run:
 
 ```
-./gradlew -Pprod -Pwar clean bootWar
+gradlew -Pprod -Pwar clean bootWar
 ```
 
 ## Testing
@@ -163,7 +163,7 @@ To package your application as a war in order to deploy it to an application ser
 To launch your application's tests, run:
 
 ```
-./gradlew test integrationTest jacocoTestReport
+gradlew test integrationTest jacocoTestReport
 ```
 
 ### Client tests
@@ -175,7 +175,7 @@ npm test
 ```
 
 UI end-to-end tests are powered by [Cypress][]. They're located in [src/test/javascript/cypress](src/test/javascript/cypress)
-and can be run by starting Spring Boot in one terminal (`./gradlew bootRun`) and running the tests (`npm run e2e`) in a second one.
+and can be run by starting Spring Boot in one terminal (`gradlew bootRun`) and running the tests (`npm run e2e`) in a second one.
 
 #### Lighthouse audits
 
@@ -200,7 +200,7 @@ You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqu
 Then, run a Sonar analysis:
 
 ```
-./gradlew -Pprod clean check jacocoTestReport sonarqube
+gradlew -Pprod clean check jacocoTestReport sonarqube
 ```
 
 For more information, refer to the [Code quality page][].
