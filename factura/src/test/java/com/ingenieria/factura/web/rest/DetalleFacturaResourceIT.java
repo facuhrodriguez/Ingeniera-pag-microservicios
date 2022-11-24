@@ -32,6 +32,9 @@ class DetalleFacturaResourceIT {
     private static final Float DEFAULT_CANTIDAD = 1F;
     private static final Float UPDATED_CANTIDAD = 2F;
 
+    private static final Long DEFAULT_ID_PRODUCTO = 1L;
+    private static final Long UPDATED_ID_PRODUCTO = 2L;
+
     private static final String ENTITY_API_URL = "/api/detalle-facturas";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -56,7 +59,7 @@ class DetalleFacturaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static DetalleFactura createEntity(EntityManager em) {
-        DetalleFactura detalleFactura = new DetalleFactura().cantidad(DEFAULT_CANTIDAD);
+        DetalleFactura detalleFactura = new DetalleFactura().cantidad(DEFAULT_CANTIDAD).idProducto(DEFAULT_ID_PRODUCTO);
         return detalleFactura;
     }
 
@@ -67,7 +70,7 @@ class DetalleFacturaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static DetalleFactura createUpdatedEntity(EntityManager em) {
-        DetalleFactura detalleFactura = new DetalleFactura().cantidad(UPDATED_CANTIDAD);
+        DetalleFactura detalleFactura = new DetalleFactura().cantidad(UPDATED_CANTIDAD).idProducto(UPDATED_ID_PRODUCTO);
         return detalleFactura;
     }
 
@@ -108,6 +111,7 @@ class DetalleFacturaResourceIT {
         assertThat(detalleFacturaList).hasSize(databaseSizeBeforeCreate + 1);
         DetalleFactura testDetalleFactura = detalleFacturaList.get(detalleFacturaList.size() - 1);
         assertThat(testDetalleFactura.getCantidad()).isEqualTo(DEFAULT_CANTIDAD);
+        assertThat(testDetalleFactura.getIdProducto()).isEqualTo(DEFAULT_ID_PRODUCTO);
     }
 
     @Test
@@ -156,6 +160,7 @@ class DetalleFacturaResourceIT {
         assertThat(detalleFacturaList).hasSize(1);
         DetalleFactura testDetalleFactura = detalleFacturaList.get(0);
         assertThat(testDetalleFactura.getCantidad()).isEqualTo(DEFAULT_CANTIDAD);
+        assertThat(testDetalleFactura.getIdProducto()).isEqualTo(DEFAULT_ID_PRODUCTO);
     }
 
     @Test
@@ -177,7 +182,9 @@ class DetalleFacturaResourceIT {
             .jsonPath("$.[*].id")
             .value(hasItem(detalleFactura.getId().intValue()))
             .jsonPath("$.[*].cantidad")
-            .value(hasItem(DEFAULT_CANTIDAD.doubleValue()));
+            .value(hasItem(DEFAULT_CANTIDAD.doubleValue()))
+            .jsonPath("$.[*].idProducto")
+            .value(hasItem(DEFAULT_ID_PRODUCTO.intValue()));
     }
 
     @Test
@@ -199,7 +206,9 @@ class DetalleFacturaResourceIT {
             .jsonPath("$.id")
             .value(is(detalleFactura.getId().intValue()))
             .jsonPath("$.cantidad")
-            .value(is(DEFAULT_CANTIDAD.doubleValue()));
+            .value(is(DEFAULT_CANTIDAD.doubleValue()))
+            .jsonPath("$.idProducto")
+            .value(is(DEFAULT_ID_PRODUCTO.intValue()));
     }
 
     @Test
@@ -223,7 +232,7 @@ class DetalleFacturaResourceIT {
 
         // Update the detalleFactura
         DetalleFactura updatedDetalleFactura = detalleFacturaRepository.findById(detalleFactura.getId()).block();
-        updatedDetalleFactura.cantidad(UPDATED_CANTIDAD);
+        updatedDetalleFactura.cantidad(UPDATED_CANTIDAD).idProducto(UPDATED_ID_PRODUCTO);
 
         webTestClient
             .put()
@@ -239,6 +248,7 @@ class DetalleFacturaResourceIT {
         assertThat(detalleFacturaList).hasSize(databaseSizeBeforeUpdate);
         DetalleFactura testDetalleFactura = detalleFacturaList.get(detalleFacturaList.size() - 1);
         assertThat(testDetalleFactura.getCantidad()).isEqualTo(UPDATED_CANTIDAD);
+        assertThat(testDetalleFactura.getIdProducto()).isEqualTo(UPDATED_ID_PRODUCTO);
     }
 
     @Test
@@ -312,7 +322,7 @@ class DetalleFacturaResourceIT {
         DetalleFactura partialUpdatedDetalleFactura = new DetalleFactura();
         partialUpdatedDetalleFactura.setId(detalleFactura.getId());
 
-        partialUpdatedDetalleFactura.cantidad(UPDATED_CANTIDAD);
+        partialUpdatedDetalleFactura.cantidad(UPDATED_CANTIDAD).idProducto(UPDATED_ID_PRODUCTO);
 
         webTestClient
             .patch()
@@ -328,6 +338,7 @@ class DetalleFacturaResourceIT {
         assertThat(detalleFacturaList).hasSize(databaseSizeBeforeUpdate);
         DetalleFactura testDetalleFactura = detalleFacturaList.get(detalleFacturaList.size() - 1);
         assertThat(testDetalleFactura.getCantidad()).isEqualTo(UPDATED_CANTIDAD);
+        assertThat(testDetalleFactura.getIdProducto()).isEqualTo(UPDATED_ID_PRODUCTO);
     }
 
     @Test
@@ -341,7 +352,7 @@ class DetalleFacturaResourceIT {
         DetalleFactura partialUpdatedDetalleFactura = new DetalleFactura();
         partialUpdatedDetalleFactura.setId(detalleFactura.getId());
 
-        partialUpdatedDetalleFactura.cantidad(UPDATED_CANTIDAD);
+        partialUpdatedDetalleFactura.cantidad(UPDATED_CANTIDAD).idProducto(UPDATED_ID_PRODUCTO);
 
         webTestClient
             .patch()
@@ -357,6 +368,7 @@ class DetalleFacturaResourceIT {
         assertThat(detalleFacturaList).hasSize(databaseSizeBeforeUpdate);
         DetalleFactura testDetalleFactura = detalleFacturaList.get(detalleFacturaList.size() - 1);
         assertThat(testDetalleFactura.getCantidad()).isEqualTo(UPDATED_CANTIDAD);
+        assertThat(testDetalleFactura.getIdProducto()).isEqualTo(UPDATED_ID_PRODUCTO);
     }
 
     @Test

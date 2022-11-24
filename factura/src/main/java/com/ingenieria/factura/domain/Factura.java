@@ -36,7 +36,7 @@ public class Factura implements Serializable {
     private Double totalConIva;
 
     @Transient
-    @JsonIgnoreProperties(value = { "producto", "factura" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "factura" }, allowSetters = true)
     private Set<DetalleFactura> detalleFacturas = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

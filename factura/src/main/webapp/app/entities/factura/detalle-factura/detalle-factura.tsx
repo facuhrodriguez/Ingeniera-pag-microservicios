@@ -60,7 +60,7 @@ export const DetalleFactura = () => {
                   <Translate contentKey="facturaApp.facturaDetalleFactura.cantidad">Cantidad</Translate>
                 </th>
                 <th>
-                  <Translate contentKey="facturaApp.facturaDetalleFactura.producto">Producto</Translate>
+                  <Translate contentKey="facturaApp.facturaDetalleFactura.idProducto">Id Producto</Translate>
                 </th>
                 <th>
                   <Translate contentKey="facturaApp.facturaDetalleFactura.factura">Factura</Translate>
@@ -77,13 +77,7 @@ export const DetalleFactura = () => {
                     </Button>
                   </td>
                   <td>{detalleFactura.cantidad}</td>
-                  <td>
-                    {detalleFactura.producto ? (
-                      <Link to={`/factura/producto/${detalleFactura.producto.id}`}>{detalleFactura.producto.id}</Link>
-                    ) : (
-                      ''
-                    )}
-                  </td>
+                  <td>{detalleFactura.idProducto}</td>
                   <td>
                     {detalleFactura.factura ? (
                       <Link to={`/factura/factura/${detalleFactura.factura.id}`}>{detalleFactura.factura.id}</Link>

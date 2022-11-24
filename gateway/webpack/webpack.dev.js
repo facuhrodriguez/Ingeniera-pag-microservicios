@@ -15,7 +15,7 @@ module.exports = async options =>
   webpackMerge(await commonConfig({ env: ENV }), {
     devtool: 'cheap-module-source-map', // https://reactjs.org/docs/cross-origin-errors.html
     mode: ENV,
-    entry: ['./src/main/webapp/app/main'],
+    entry: ['./src/main/webapp/app/index'],
     output: {
       path: utils.root('build/resources/main/static/'),
       filename: '[name].[contenthash:8].js',
@@ -43,11 +43,11 @@ module.exports = async options =>
       ],
     },
     devServer: {
-      hot: false,
+      hot: true,
       static: {
         directory: './build/resources/main/static/',
       },
-      port: 9062,
+      port: 9060,
       proxy: [
         {
           context: ['/api', '/services', '/management', '/v3/api-docs', '/h2-console', '/auth'],
@@ -72,7 +72,7 @@ module.exports = async options =>
           host: 'localhost',
           port: 9000,
           proxy: {
-            target: `http${options.tls ? 's' : ''}://localhost:${options.watch ? '8080' : '9062'}`,
+            target: `http${options.tls ? 's' : ''}://localhost:${options.watch ? '8080' : '9060'}`,
             ws: true,
             proxyOptions: {
               changeOrigin: false, //pass the Host header to the backend unchanged  https://github.com/Browsersync/browser-sync/issues/430

@@ -1,8 +1,8 @@
 dependencies {
-    implementation "org.postgresql:r2dbc-postgresql"
-    implementation "org.postgresql:postgresql"
-    liquibaseRuntime "org.postgresql:postgresql"
-    testImplementation "org.testcontainers:postgresql"
+    implementation ("org.mariadb:r2dbc-mariadb")
+    implementation "mysql:mysql-connector-java"
+    liquibaseRuntime "mysql:mysql-connector-java"
+    testImplementation "org.testcontainers:mysql"
 }
 
 def profiles = "prod"

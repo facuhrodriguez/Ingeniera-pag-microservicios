@@ -144,8 +144,7 @@ module.exports = async options => {
           },
         }),
       ],
-    },
-    require('./webpack.microfrontend')({ serve: options.env.WEBPACK_SERVE })
+    }
     // jhipster-needle-add-webpack-config - JHipster will add custom config
   );
 };

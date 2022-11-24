@@ -26,7 +26,7 @@ public class DetalleFacturaRowMapper implements BiFunction<Row, String, DetalleF
         DetalleFactura entity = new DetalleFactura();
         entity.setId(converter.fromRow(row, prefix + "_id", Long.class));
         entity.setCantidad(converter.fromRow(row, prefix + "_cantidad", Float.class));
-        entity.setProductoId(converter.fromRow(row, prefix + "_producto_id", Long.class));
+        entity.setIdProducto(converter.fromRow(row, prefix + "_id_producto", Long.class));
         entity.setFacturaId(converter.fromRow(row, prefix + "_factura_id", Long.class));
         return entity;
     }

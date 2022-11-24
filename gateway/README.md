@@ -43,7 +43,7 @@ Run the following commands in two separate terminals to create a blissful develo
 auto-refreshes when files change on your hard drive.
 
 ```
-gradlew -x webapp
+./gradlew -x webapp
 npm start
 ```
 
@@ -90,37 +90,6 @@ Note: There are still a few other things remaining to do for Leaflet that we won
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
 
-### Developing Microfrontend
-
-Microservices doesn't contain every required backend feature to allow microfrontends to run alone.
-You must start a pre-built gateway version or from source.
-
-Start gateway from source:
-
-```
-cd gateway
-npm run docker:db:up # start database if necessary
-npm run docker:others:up # start service discovery and authentication service if necessary
-npm run app:start # alias for ./(mvnw|gradlew)
-```
-
-Microfrontend's `build-watch` script is configured to watch and compile microfrontend's sources and synchronizes with gateway's frontend.
-Start it using:
-
-```
-cd microfrontend
-npm run docker:db:up # start database if necessary
-npm run build-watch
-```
-
-It's possible to run microfrontend's frontend standalone using:
-
-```
-cd microfrontend
-npm run docker:db:up # start database if necessary
-npm watch # alias for `npm start` and `npm run backend:start` in parallel
-```
-
 ### JHipster Control Center
 
 JHipster Control Center can help you manage and control your application(s). You can start a local control center server (accessible on http://localhost:7419) with:
@@ -136,7 +105,7 @@ docker-compose -f src/main/docker/jhipster-control-center.yml up
 To build the final jar and optimize the gateway application for production, run:
 
 ```
-gradlew -Pprod clean bootJar
+./gradlew -Pprod clean bootJar
 ```
 
 This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
@@ -155,7 +124,7 @@ Refer to [Using JHipster in production][] for more details.
 To package your application as a war in order to deploy it to an application server, run:
 
 ```
-gradlew -Pprod -Pwar clean bootWar
+./gradlew -Pprod -Pwar clean bootWar
 ```
 
 ## Testing
@@ -163,7 +132,7 @@ gradlew -Pprod -Pwar clean bootWar
 To launch your application's tests, run:
 
 ```
-gradlew test integrationTest jacocoTestReport
+./gradlew test integrationTest jacocoTestReport
 ```
 
 ### Client tests
@@ -175,7 +144,7 @@ npm test
 ```
 
 UI end-to-end tests are powered by [Cypress][]. They're located in [src/test/javascript/cypress](src/test/javascript/cypress)
-and can be run by starting Spring Boot in one terminal (`gradlew bootRun`) and running the tests (`npm run e2e`) in a second one.
+and can be run by starting Spring Boot in one terminal (`./gradlew bootRun`) and running the tests (`npm run e2e`) in a second one.
 
 #### Lighthouse audits
 
@@ -200,7 +169,7 @@ You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqu
 Then, run a Sonar analysis:
 
 ```
-gradlew -Pprod clean check jacocoTestReport sonarqube
+./gradlew -Pprod clean check jacocoTestReport sonarqube
 ```
 
 For more information, refer to the [Code quality page][].
@@ -209,16 +178,16 @@ For more information, refer to the [Code quality page][].
 
 You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
 
-For example, to start a postgresql database in a docker container, run:
+For example, to start a mysql database in a docker container, run:
 
 ```
-docker-compose -f src/main/docker/postgresql.yml up -d
+docker-compose -f src/main/docker/mysql.yml up -d
 ```
 
 To stop it and remove the container, run:
 
 ```
-docker-compose -f src/main/docker/postgresql.yml down
+docker-compose -f src/main/docker/mysql.yml down
 ```
 
 You can also fully dockerize your application and all the services that it depends on.

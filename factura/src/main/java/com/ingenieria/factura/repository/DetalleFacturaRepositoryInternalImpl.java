@@ -5,7 +5,6 @@ import static org.springframework.data.relational.core.query.Criteria.where;
 import com.ingenieria.factura.domain.DetalleFactura;
 import com.ingenieria.factura.repository.rowmapper.DetalleFacturaRowMapper;
 import com.ingenieria.factura.repository.rowmapper.FacturaRowMapper;
-import com.ingenieria.factura.repository.rowmapper.ProductoRowMapper;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import java.util.ArrayList;
@@ -45,18 +44,15 @@ class DetalleFacturaRepositoryInternalImpl extends SimpleR2dbcRepository<Detalle
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final EntityManager entityManager;
 
-    private final ProductoRowMapper productoMapper;
     private final FacturaRowMapper facturaMapper;
     private final DetalleFacturaRowMapper detallefacturaMapper;
 
     private static final Table entityTable = Table.aliased("detalle_factura", EntityManager.ENTITY_ALIAS);
-    private static final Table productoTable = Table.aliased("producto", "producto");
     private static final Table facturaTable = Table.aliased("factura", "factura");
 
     public DetalleFacturaRepositoryInternalImpl(
         R2dbcEntityTemplate template,
         EntityManager entityManager,
-        ProductoRowMapper productoMapper,
         FacturaRowMapper facturaMapper,
         DetalleFacturaRowMapper detallefacturaMapper,
         R2dbcEntityOperations entityOperations,
@@ -70,7 +66,6 @@ class DetalleFacturaRepositoryInternalImpl extends SimpleR2dbcRepository<Detalle
         this.db = template.getDatabaseClient();
         this.r2dbcEntityTemplate = template;
         this.entityManager = entityManager;
-        this.productoMapper = productoMapper;
         this.facturaMapper = facturaMapper;
         this.detallefacturaMapper = detallefacturaMapper;
     }
@@ -82,15 +77,11 @@ class DetalleFacturaRepositoryInternalImpl extends SimpleR2dbcRepository<Detalle
 
     RowsFetchSpec<DetalleFactura> createQuery(Pageable pageable, Condition whereClause) {
         List<Expression> columns = DetalleFacturaSqlHelper.getColumns(entityTable, EntityManager.ENTITY_ALIAS);
-        columns.addAll(ProductoSqlHelper.getColumns(productoTable, "producto"));
         columns.addAll(FacturaSqlHelper.getColumns(facturaTable, "factura"));
         SelectFromAndJoinCondition selectFrom = Select
             .builder()
             .select(columns)
             .from(entityTable)
-            .leftOuterJoin(productoTable)
-            .on(Column.create("producto_id", entityTable))
-            .equals(Column.create("id", productoTable))
             .leftOuterJoin(facturaTable)
             .on(Column.create("factura_id", entityTable))
             .equals(Column.create("id", facturaTable));
@@ -112,7 +103,6 @@ class DetalleFacturaRepositoryInternalImpl extends SimpleR2dbcRepository<Detalle
 
     private DetalleFactura process(Row row, RowMetadata metadata) {
         DetalleFactura entity = detallefacturaMapper.apply(row, "e");
-        entity.setProducto(productoMapper.apply(row, "producto"));
         entity.setFactura(facturaMapper.apply(row, "factura"));
         return entity;
     }

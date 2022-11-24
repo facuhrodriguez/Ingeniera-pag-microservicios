@@ -15,12 +15,6 @@ import reactor.core.publisher.Mono;
 @SuppressWarnings("unused")
 @Repository
 public interface DetalleFacturaRepository extends ReactiveCrudRepository<DetalleFactura, Long>, DetalleFacturaRepositoryInternal {
-    @Query("SELECT * FROM detalle_factura entity WHERE entity.producto_id = :id")
-    Flux<DetalleFactura> findByProducto(Long id);
-
-    @Query("SELECT * FROM detalle_factura entity WHERE entity.producto_id IS NULL")
-    Flux<DetalleFactura> findAllWhereProductoIsNull();
-
     @Query("SELECT * FROM detalle_factura entity WHERE entity.factura_id = :id")
     Flux<DetalleFactura> findByFactura(Long id);
 

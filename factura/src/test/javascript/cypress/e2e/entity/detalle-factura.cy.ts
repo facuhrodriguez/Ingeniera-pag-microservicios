@@ -15,7 +15,7 @@ describe('DetalleFactura e2e test', () => {
   const detalleFacturaPageUrlPattern = new RegExp('/factura/detalle-factura(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const detalleFacturaSample = { cantidad: 12035 };
+  const detalleFacturaSample = { cantidad: 86143 };
 
   let detalleFactura;
 
@@ -160,6 +160,8 @@ describe('DetalleFactura e2e test', () => {
 
     it('should create an instance of DetalleFactura', () => {
       cy.get(`[data-cy="cantidad"]`).type('66665').should('have.value', '66665');
+
+      cy.get(`[data-cy="idProducto"]`).type('12035').should('have.value', '12035');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

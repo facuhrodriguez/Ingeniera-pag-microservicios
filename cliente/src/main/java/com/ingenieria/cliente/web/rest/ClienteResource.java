@@ -180,6 +180,13 @@ public class ClienteResource {
      */
     @GetMapping("/clientes")
     public Mono<List<Cliente>> getAllClientes(@RequestParam(required = false) String filter) {
+        if ("telefono-is-null".equals(filter)) {
+            log.debug("REST request to get all Clientes where telefono is null");
+            return StreamSupport
+                .stream(clienteRepository.findAll().spliterator(), false)
+                .filter(cliente -> cliente.getTelefono() == null)
+                .collect(Collectors.toList());
+        }
         log.debug("REST request to get all Clientes");
         return clienteRepository.findAll().collectList();
     }

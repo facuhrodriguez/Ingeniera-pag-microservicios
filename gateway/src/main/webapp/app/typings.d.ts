@@ -7,23 +7,3 @@ declare module '*.json' {
   const value: any;
   export default value;
 }
-
-declare module '@factura/entities-routes' {
-  const _default: () => JSX.Element;
-  export default _default;
-}
-
-declare module '@factura/entities-menu' {
-  const _default: () => JSX.Element;
-  export default _default;
-}
-
-declare module '@cliente/entities-routes' {
-  const _default: () => JSX.Element;
-  export default _default;
-}
-
-declare module '@cliente/entities-menu' {
-  const _default: () => JSX.Element;
-  export default _default;
-}

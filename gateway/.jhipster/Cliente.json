@@ -1,0 +1,41 @@
+{
+  "applications": ["gateway", "cliente"],
+  "changelogDate": "20221124211614",
+  "databaseType": "sql",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "cliente",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "apellido",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "direccion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "activo",
+      "fieldType": "Integer"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "Cliente",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "telefono",
+      "otherEntityRelationshipName": "cliente",
+      "ownerSide": false,
+      "relationshipName": "telefono",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "service": "no"
+}

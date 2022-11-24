@@ -7,11 +7,11 @@ application {
     authenticationType jwt
     buildTool gradle
     clientFramework react
-    prodDatabaseType postgresql
+    prodDatabaseType mysql
     serviceDiscoveryType consul
     testFrameworks [cypress]
-    microfrontends [factura, cliente]
   }
+  entities Cliente, Telefono, Factura, DetalleFactura, Producto
 }
 
 application {
@@ -31,7 +31,27 @@ application {
     serviceDiscoveryType consul
     testFrameworks [cypress]
   }
-  entities Factura, DetalleFactura, Producto
+  entities Factura, DetalleFactura
+}
+
+application {
+  config {
+    baseName producto
+    reactive true
+    packageName com.ingenieria.producto
+    applicationType microservice
+    authenticationType jwt
+    buildTool gradle
+    clientFramework react
+    databaseType sql
+    devDatabaseType mysql
+    prodDatabaseType mysql
+    enableHibernateCache false
+    serverPort 8082
+    serviceDiscoveryType consul
+    testFrameworks [cypress]
+  }
+  entities Producto
 }
 
 application {
@@ -47,7 +67,7 @@ application {
     devDatabaseType mongodb
     prodDatabaseType mongodb
     enableHibernateCache false
-    serverPort 8082
+    serverPort 8083
     serviceDiscoveryType consul
     testFrameworks [cypress]
   }
@@ -55,62 +75,42 @@ application {
 }
 
 entity Telefono {
-	codigoArea Integer,
-    nroTelefono Integer,
-    tipo String,
+  codigoArea Integer
+  nroTelefono Integer
+  tipo String
 }
-
 entity Cliente {
-    nombre String,
-    apellido String,
-    direccion String,
-    activo Integer
+  nombre String
+  apellido String
+  direccion String
+  activo Integer
 }
-
 entity Factura {
-    fecha LocalDate,
-    totalSinIva Double,
-    iva Double,
-    totalConIva Double,
+  fecha LocalDate
+    totalSinIva Double
+    iva Double
+    totalConIva Double
 }
-
 entity DetalleFactura {
-    cantidad Float,
+  cantidad Float
+  idProducto Long
 }
-
 entity Producto {
-    marca String,
-    nombre String,
-    descripcion String,
-    precio Float,
-    stock Integer
+  marca String
+  nombre String
+  descripcion String
+  precio Float
+  stock Integer
 }
-
-
 relationship OneToOne {
   Telefono to Cliente
 }
-
 relationship ManyToOne {
-	DetalleFactura to Producto
   DetalleFactura to Factura
 }
-
-
 deployment {
   deploymentType docker-compose
   serviceDiscoveryType consul
-  appsFolders [gateway, factura, cliente]
-  dockerRepositoryName "mraible"
-}
-
-deployment {
-  deploymentType kubernetes
-  appsFolders [gateway, factura, cliente]
-  clusteredDbApps [store]
-  kubernetesNamespace demo
-  kubernetesUseDynamicStorage true
-  kubernetesStorageClassName ""
-  serviceDiscoveryType consul
+  appsFolders [gateway, factura, cliente, producto]
   dockerRepositoryName "mraible"
 }

@@ -37,7 +37,7 @@ public class TestContainersSpringContextCustomizerFactory implements ContextCust
                     if (null == prodTestContainer) {
                         try {
                             Class<? extends SqlTestContainer> containerClass = (Class<? extends SqlTestContainer>) Class.forName(
-                                this.getClass().getPackageName() + ".PostgreSqlTestContainer"
+                                this.getClass().getPackageName() + ".MysqlTestContainer"
                             );
                             prodTestContainer = beanFactory.createBean(containerClass);
                             beanFactory.registerSingleton(containerClass.getName(), prodTestContainer);
@@ -48,11 +48,18 @@ public class TestContainersSpringContextCustomizerFactory implements ContextCust
                     }
                     testValues =
                         testValues.and(
-                            "spring.r2dbc.url=" + prodTestContainer.getTestContainer().getJdbcUrl().replace("jdbc", "r2dbc") + ""
+                            "spring.r2dbc.url=" +
+                            prodTestContainer.getTestContainer().getJdbcUrl().replace("jdbc", "r2dbc").replace("mysql", "mariadb") +
+                            "?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true"
                         );
                     testValues = testValues.and("spring.r2dbc.username=" + prodTestContainer.getTestContainer().getUsername());
                     testValues = testValues.and("spring.r2dbc.password=" + prodTestContainer.getTestContainer().getPassword());
-                    testValues = testValues.and("spring.liquibase.url=" + prodTestContainer.getTestContainer().getJdbcUrl() + "");
+                    testValues =
+                        testValues.and(
+                            "spring.liquibase.url=" +
+                            prodTestContainer.getTestContainer().getJdbcUrl() +
+                            "?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true"
+                        );
                 }
             }
             testValues.applyTo(context);

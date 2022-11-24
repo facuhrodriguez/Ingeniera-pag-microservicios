@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom';
 import Loadable from 'react-loadable';
 
@@ -26,9 +26,6 @@ const Admin = Loadable({
   loader: () => import(/* webpackChunkName: "administration" */ 'app/modules/administration'),
   loading: () => loading,
 });
-
-const FacturaRoutes = React.lazy(() => import('@factura/entities-routes').catch(() => import('app/shared/error/error-loading')));
-const ClienteRoutes = React.lazy(() => import('@cliente/entities-routes').catch(() => import('app/shared/error/error-loading')));
 
 const AppRoutes = () => {
   return (
@@ -59,26 +56,6 @@ const AppRoutes = () => {
             <PrivateRoute hasAnyAuthorities={[AUTHORITIES.ADMIN]}>
               <Admin />
             </PrivateRoute>
-          }
-        />
-        <Route
-          path="factura/*"
-          element={
-            <Suspense fallback={loading}>
-              <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER]}>
-                <FacturaRoutes />
-              </PrivateRoute>
-            </Suspense>
-          }
-        />
-        <Route
-          path="cliente/*"
-          element={
-            <Suspense fallback={loading}>
-              <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER]}>
-                <ClienteRoutes />
-              </PrivateRoute>
-            </Suspense>
           }
         />
         <Route

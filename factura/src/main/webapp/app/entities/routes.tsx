@@ -11,7 +11,6 @@ import entitiesReducers from './reducers';
 
 import DetalleFactura from './factura/detalle-factura';
 import Factura from './factura/factura';
-import Producto from './factura/producto';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 export default () => {
@@ -23,7 +22,6 @@ export default () => {
         {/* prettier-ignore */}
         <Route path="/detalle-factura/*" element={<DetalleFactura />} />
         <Route path="/factura/*" element={<Factura />} />
-        <Route path="/producto/*" element={<Producto />} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </ErrorBoundaryRoutes>
     </div>

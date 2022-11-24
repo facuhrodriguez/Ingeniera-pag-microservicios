@@ -1,0 +1,27 @@
+{
+  "gatewayApp": {
+    "telefono": {
+      "home": {
+        "title": "Telefonos",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Telefono",
+        "createOrEditLabel": "Create or edit a Telefono",
+        "notFound": "No Telefonos found"
+      },
+      "created": "A new Telefono is created with identifier {{ param }}",
+      "updated": "A Telefono is updated with identifier {{ param }}",
+      "deleted": "A Telefono is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Telefono {{ id }}?"
+      },
+      "detail": {
+        "title": "Telefono"
+      },
+      "id": "ID",
+      "codigoArea": "Codigo Area",
+      "nroTelefono": "Nro Telefono",
+      "tipo": "Tipo",
+      "cliente": "Cliente"
+    }
+  }
+}

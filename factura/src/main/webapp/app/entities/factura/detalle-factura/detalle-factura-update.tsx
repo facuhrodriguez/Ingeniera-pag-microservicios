@@ -8,8 +8,6 @@ import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateT
 import { mapIdList } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-import { IProducto } from 'app/shared/model/factura/producto.model';
-import { getEntities as getProductos } from 'app/entities/factura/producto/producto.reducer';
 import { IFactura } from 'app/shared/model/factura/factura.model';
 import { getEntities as getFacturas } from 'app/entities/factura/factura/factura.reducer';
 import { IDetalleFactura } from 'app/shared/model/factura/detalle-factura.model';
@@ -23,7 +21,6 @@ export const DetalleFacturaUpdate = () => {
   const { id } = useParams<'id'>();
   const isNew = id === undefined;
 
-  const productos = useAppSelector(state => state.factura.producto.entities);
   const facturas = useAppSelector(state => state.factura.factura.entities);
   const detalleFacturaEntity = useAppSelector(state => state.factura.detalleFactura.entity);
   const loading = useAppSelector(state => state.factura.detalleFactura.loading);
@@ -41,7 +38,6 @@ export const DetalleFacturaUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getProductos({}));
     dispatch(getFacturas({}));
   }, []);
 
@@ -55,7 +51,6 @@ export const DetalleFacturaUpdate = () => {
     const entity = {
       ...detalleFacturaEntity,
       ...values,
-      producto: productos.find(it => it.id.toString() === values.producto.toString()),
       factura: facturas.find(it => it.id.toString() === values.factura.toString()),
     };
 
@@ -71,7 +66,6 @@ export const DetalleFacturaUpdate = () => {
       ? {}
       : {
           ...detalleFacturaEntity,
-          producto: detalleFacturaEntity?.producto?.id,
           factura: detalleFacturaEntity?.factura?.id,
         };
 
@@ -108,21 +102,12 @@ export const DetalleFacturaUpdate = () => {
                 type="text"
               />
               <ValidatedField
-                id="detalle-factura-producto"
-                name="producto"
-                data-cy="producto"
-                label={translate('facturaApp.facturaDetalleFactura.producto')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {productos
-                  ? productos.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
+                label={translate('facturaApp.facturaDetalleFactura.idProducto')}
+                id="detalle-factura-idProducto"
+                name="idProducto"
+                data-cy="idProducto"
+                type="text"
+              />
               <ValidatedField
                 id="detalle-factura-factura"
                 name="factura"

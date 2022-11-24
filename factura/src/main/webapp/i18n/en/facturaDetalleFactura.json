@@ -19,7 +19,7 @@
       },
       "id": "ID",
       "cantidad": "Cantidad",
-      "producto": "Producto",
+      "idProducto": "Id Producto",
       "factura": "Factura"
     }
   }

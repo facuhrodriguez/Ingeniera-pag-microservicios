@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "applicationIndex": 2,
+    "applicationIndex": 0,
     "applicationType": "gateway",
     "authenticationType": "jwt",
     "baseName": "gateway",
@@ -11,37 +11,31 @@
     "clientPackageManager": "npm",
     "clientTheme": "none",
     "clientThemeVariant": "",
-    "creationTimestamp": 1669256654938,
+    "creationTimestamp": 1669324454897,
     "databaseType": "sql",
     "devDatabaseType": "h2Disk",
-    "devServerPort": 9062,
+    "devServerPort": 9060,
     "dtoSuffix": "DTO",
     "enableGradleEnterprise": false,
     "enableHibernateCache": false,
     "enableSwaggerCodegen": false,
     "enableTranslation": true,
+    "entities": ["DetalleFactura", "Cliente", "Producto", "Telefono", "Factura"],
     "entitySuffix": "",
     "gradleEnterpriseHost": "",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "7.9.3",
-    "jwtSecretKey": "OTI0NGIxOTY2OWU3OTc0YmU3YjZjNzVkYmMxNzM4NTA0NGMyYWFlOTc3Y2QwNjM5Zjk2YzJlODc0NzdlZDRmOWUwZGMzZjk5ODBjZTAxZDNmNmE4MzQ1NDMzYWVjMGUyYmNjNTE4ZDNlYWRjNTZkNjc0ODFkZWI5Y2NjZDcyZWI=",
+    "jwtSecretKey": "ZTIxZjI4NWU4YmEyZjY4OWQyNjRkMzc2ZTcxNDIzOGNiNzBiOTE1NDE5ODZlMzY1YTlmM2MwZGViNzZiMTMyNDdhNTkyMzhmYWJjNjhmYzYyNDMyMTY0YjczOWE2ZDEwN2U3MmFiMDM3YWZiNGJlOTBlY2NjM2RjYWM2OGE1ZmE=",
     "languages": ["en"],
+    "lastLiquibaseTimestamp": 1669324754000,
     "messageBroker": false,
-    "microfrontends": [
-      {
-        "baseName": "factura"
-      },
-      {
-        "baseName": "cliente"
-      }
-    ],
     "monorepository": true,
     "nativeLanguage": "en",
     "otherModules": [],
     "packageFolder": "com/ingenieria/gateway",
     "packageName": "com.ingenieria.gateway",
     "pages": [],
-    "prodDatabaseType": "postgresql",
+    "prodDatabaseType": "mysql",
     "reactive": true,
     "searchEngine": false,
     "serverPort": "8080",

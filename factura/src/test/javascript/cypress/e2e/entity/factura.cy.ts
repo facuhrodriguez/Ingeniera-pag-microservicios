@@ -15,7 +15,7 @@ describe('Factura e2e test', () => {
   const facturaPageUrlPattern = new RegExp('/factura/factura(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const facturaSample = { fecha: '2022-11-23' };
+  const facturaSample = { fecha: '2022-11-24' };
 
   let factura;
 
@@ -159,7 +159,7 @@ describe('Factura e2e test', () => {
     });
 
     it('should create an instance of Factura', () => {
-      cy.get(`[data-cy="fecha"]`).type('2022-11-23').blur().should('have.value', '2022-11-23');
+      cy.get(`[data-cy="fecha"]`).type('2022-11-24').blur().should('have.value', '2022-11-24');
 
       cy.get(`[data-cy="totalSinIva"]`).type('16907').should('have.value', '16907');
 

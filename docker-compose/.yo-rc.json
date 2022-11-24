@@ -1,12 +1,12 @@
 {
   "generator-jhipster": {
-    "appsFolders": ["gateway", "factura", "cliente"],
+    "appsFolders": ["gateway", "factura", "cliente", "producto"],
     "clusteredDbApps": [],
     "deploymentType": "docker-compose",
     "directoryPath": "../",
     "dockerRepositoryName": "mraible",
     "gatewayType": "SpringCloudGateway",
-    "jwtSecretKey": "NDRlMWFmNmFhNTk5ZWRmNDQ2Y2Y3MTU4NmJkZDAyODZkYTFiNzIwYzNkOTczY2U2MGNiYTk0ZDk4YjI3MGI3MDMzYjM0NWQ0OWViODM4NzAxZjZjZDBhNGM4ODEwZDMxNjBiYw==",
+    "jwtSecretKey": "YjViZDc3MDIxNzVkYzkyN2YxYjhkZWZmMjk2NTI2OTQyMmRkYjM0YTMzMWQwNmFjYWJjMGI3Y2UyOTM4YTU0YjUxZWVmOTE1ZmFmMzEzYTljODdjYTU1MzQwMzI2MTdmYjQwMA==",
     "monitoring": "no",
     "monorepository": true,
     "serviceDiscoveryType": "consul"

@@ -1,6 +1,6 @@
 {
-  "applications": ["cliente"],
-  "changelogDate": "20221124022608",
+  "applications": ["gateway", "cliente"],
+  "changelogDate": "20221124211615",
   "clientRootFolder": "cliente",
   "databaseType": "mongodb",
   "dto": "no",

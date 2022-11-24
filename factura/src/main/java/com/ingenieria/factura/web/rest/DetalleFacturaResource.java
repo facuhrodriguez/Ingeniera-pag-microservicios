@@ -149,6 +149,9 @@ public class DetalleFacturaResource {
                         if (detalleFactura.getCantidad() != null) {
                             existingDetalleFactura.setCantidad(detalleFactura.getCantidad());
                         }
+                        if (detalleFactura.getIdProducto() != null) {
+                            existingDetalleFactura.setIdProducto(detalleFactura.getIdProducto());
+                        }
 
                         return existingDetalleFactura;
                     })

@@ -4,8 +4,6 @@
   "exclude": [],
   "compilerOptions": {
     "paths": {
-      "@factura/*": ["src/main/webapp/microfrontends/*"],
-      "@cliente/*": ["src/main/webapp/microfrontends/*"],
       "app/*": ["src/main/webapp/app/*"]
     },
     "types": ["jest", "webpack-env"]

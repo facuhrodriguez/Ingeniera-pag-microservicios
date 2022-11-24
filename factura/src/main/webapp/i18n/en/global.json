@@ -9,7 +9,6 @@
         "main": "Entities",
         "facturaDetalleFactura": "Detalle Factura",
         "facturaFactura": "Factura",
-        "facturaProducto": "Producto",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

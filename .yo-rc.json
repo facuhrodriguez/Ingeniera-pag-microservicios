@@ -3,6 +3,6 @@
     "clientPackageManager": "npm",
     "dockerCompose": true,
     "monorepository": true,
-    "packages": ["factura", "cliente", "gateway"]
+    "packages": ["gateway", "factura", "producto", "cliente"]
   }
 }

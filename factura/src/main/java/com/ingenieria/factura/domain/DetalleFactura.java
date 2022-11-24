@@ -23,16 +23,12 @@ public class DetalleFactura implements Serializable {
     @Column("cantidad")
     private Float cantidad;
 
-    @Transient
-    @JsonIgnoreProperties(value = { "detalleFacturas" }, allowSetters = true)
-    private Producto producto;
+    @Column("id_producto")
+    private Long idProducto;
 
     @Transient
     @JsonIgnoreProperties(value = { "detalleFacturas" }, allowSetters = true)
     private Factura factura;
-
-    @Column("producto_id")
-    private Long productoId;
 
     @Column("factura_id")
     private Long facturaId;
@@ -65,18 +61,17 @@ public class DetalleFactura implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public Producto getProducto() {
-        return this.producto;
+    public Long getIdProducto() {
+        return this.idProducto;
     }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
-        this.productoId = producto != null ? producto.getId() : null;
-    }
-
-    public DetalleFactura producto(Producto producto) {
-        this.setProducto(producto);
+    public DetalleFactura idProducto(Long idProducto) {
+        this.setIdProducto(idProducto);
         return this;
+    }
+
+    public void setIdProducto(Long idProducto) {
+        this.idProducto = idProducto;
     }
 
     public Factura getFactura() {
@@ -91,14 +86,6 @@ public class DetalleFactura implements Serializable {
     public DetalleFactura factura(Factura factura) {
         this.setFactura(factura);
         return this;
-    }
-
-    public Long getProductoId() {
-        return this.productoId;
-    }
-
-    public void setProductoId(Long producto) {
-        this.productoId = producto;
     }
 
     public Long getFacturaId() {
@@ -134,6 +121,7 @@ public class DetalleFactura implements Serializable {
         return "DetalleFactura{" +
             "id=" + getId() +
             ", cantidad=" + getCantidad() +
+            ", idProducto=" + getIdProducto() +
             "}";
     }
 }

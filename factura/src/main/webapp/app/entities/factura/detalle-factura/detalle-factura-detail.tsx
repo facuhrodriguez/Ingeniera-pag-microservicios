@@ -39,9 +39,11 @@ export const DetalleFacturaDetail = () => {
           </dt>
           <dd>{detalleFacturaEntity.cantidad}</dd>
           <dt>
-            <Translate contentKey="facturaApp.facturaDetalleFactura.producto">Producto</Translate>
+            <span id="idProducto">
+              <Translate contentKey="facturaApp.facturaDetalleFactura.idProducto">Id Producto</Translate>
+            </span>
           </dt>
-          <dd>{detalleFacturaEntity.producto ? detalleFacturaEntity.producto.id : ''}</dd>
+          <dd>{detalleFacturaEntity.idProducto}</dd>
           <dt>
             <Translate contentKey="facturaApp.facturaDetalleFactura.factura">Factura</Translate>
           </dt>

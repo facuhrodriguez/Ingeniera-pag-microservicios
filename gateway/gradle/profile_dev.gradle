@@ -1,14 +1,14 @@
 sourceSets {
     test {
         java {
-            exclude 'com/ingenieria/gateway/config/PostgreSqlTestContainer.java'
+            exclude 'com/ingenieria/gateway/config/MysqlTestContainer.java'
         }
     }
 }
 dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
     implementation "io.r2dbc:r2dbc-h2"
-    testImplementation "org.testcontainers:postgresql"
+    testImplementation "org.testcontainers:mysql"
 }
 
 def profiles = "dev"

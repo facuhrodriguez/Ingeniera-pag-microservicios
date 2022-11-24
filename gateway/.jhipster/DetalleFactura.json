@@ -1,0 +1,32 @@
+{
+  "applications": ["gateway", "factura"],
+  "changelogDate": "20221124211514",
+  "databaseType": "sql",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "detalle_factura",
+  "fields": [
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Float"
+    },
+    {
+      "fieldName": "idProducto",
+      "fieldType": "Long"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "DetalleFactura",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "factura",
+      "otherEntityRelationshipName": "detalleFactura",
+      "relationshipName": "factura",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "no"
+}

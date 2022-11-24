@@ -1,6 +1,6 @@
 {
-  "applications": ["factura"],
-  "changelogDate": "20221124022609",
+  "applications": ["gateway", "factura"],
+  "changelogDate": "20221124211614",
   "clientRootFolder": "factura",
   "databaseType": "sql",
   "dto": "no",
