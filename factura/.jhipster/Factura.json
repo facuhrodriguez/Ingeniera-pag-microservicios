@@ -1,6 +1,6 @@
 {
   "applications": ["gateway", "factura"],
-  "changelogDate": "20221124211614",
+  "changelogDate": "20221124223840",
   "clientRootFolder": "factura",
   "databaseType": "sql",
   "dto": "no",
@@ -22,6 +22,10 @@
     {
       "fieldName": "totalConIva",
       "fieldType": "Double"
+    },
+    {
+      "fieldName": "idCliente",
+      "fieldType": "Long"
     }
   ],
   "fluentMethods": true,

@@ -6,7 +6,7 @@
     "directoryPath": "../",
     "dockerRepositoryName": "mraible",
     "gatewayType": "SpringCloudGateway",
-    "jwtSecretKey": "YjViZDc3MDIxNzVkYzkyN2YxYjhkZWZmMjk2NTI2OTQyMmRkYjM0YTMzMWQwNmFjYWJjMGI3Y2UyOTM4YTU0YjUxZWVmOTE1ZmFmMzEzYTljODdjYTU1MzQwMzI2MTdmYjQwMA==",
+    "jwtSecretKey": "YjVjZDdhNDQ4NmM0NjQyODUyMGQyYWVjZGJmYjlhZWY4NGFiMjI4MjBkOGMzOWE0MmYxYTA3NDE3Mjg3NDU3ODQ1NWVlOGE4Y2IzN2FjYjZiNzRmOTQ4Y2NhZDA1MmQ2NDM1MQ==",
     "monitoring": "no",
     "monorepository": true,
     "serviceDiscoveryType": "consul"

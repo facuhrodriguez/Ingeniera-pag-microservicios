@@ -17,14 +17,14 @@
     <property name="datetimeType" value="datetime(6)" dbms="mysql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20221124211514_added_entity_DetalleFactura.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20221124211614_added_entity_Cliente.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20221124211714_added_entity_Producto.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20221124211814_added_entity_Telefono.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20221124211914_added_entity_Factura.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221124223739_added_entity_DetalleFactura.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221124223839_added_entity_Cliente.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221124223939_added_entity_Producto.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221124224039_added_entity_Telefono.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221124224139_added_entity_Factura.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
-    <include file="config/liquibase/changelog/20221124211514_added_entity_constraints_DetalleFactura.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20221124211814_added_entity_constraints_Telefono.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221124223739_added_entity_constraints_DetalleFactura.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20221124224039_added_entity_constraints_Telefono.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

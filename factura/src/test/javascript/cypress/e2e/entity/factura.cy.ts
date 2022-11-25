@@ -167,6 +167,8 @@ describe('Factura e2e test', () => {
 
       cy.get(`[data-cy="totalConIva"]`).type('45579').should('have.value', '45579');
 
+      cy.get(`[data-cy="idCliente"]`).type('84264').should('have.value', '84264');
+
       cy.get(entityCreateSaveButtonSelector).click();
 
       cy.wait('@postEntityRequest').then(({ response }) => {

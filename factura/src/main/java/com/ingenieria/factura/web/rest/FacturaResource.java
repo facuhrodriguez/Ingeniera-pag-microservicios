@@ -158,6 +158,9 @@ public class FacturaResource {
                         if (factura.getTotalConIva() != null) {
                             existingFactura.setTotalConIva(factura.getTotalConIva());
                         }
+                        if (factura.getIdCliente() != null) {
+                            existingFactura.setIdCliente(factura.getIdCliente());
+                        }
 
                         return existingFactura;
                     })

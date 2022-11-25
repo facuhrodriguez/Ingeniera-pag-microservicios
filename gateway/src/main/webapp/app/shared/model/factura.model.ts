@@ -7,6 +7,7 @@ export interface IFactura {
   totalSinIva?: number | null;
   iva?: number | null;
   totalConIva?: number | null;
+  idCliente?: number | null;
   detalleFacturas?: IDetalleFactura[] | null;
 }
 

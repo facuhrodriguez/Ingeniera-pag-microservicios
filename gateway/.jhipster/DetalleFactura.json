@@ -1,6 +1,6 @@
 {
   "applications": ["gateway", "factura"],
-  "changelogDate": "20221124211514",
+  "changelogDate": "20221124223739",
   "databaseType": "sql",
   "dto": "no",
   "embedded": false,

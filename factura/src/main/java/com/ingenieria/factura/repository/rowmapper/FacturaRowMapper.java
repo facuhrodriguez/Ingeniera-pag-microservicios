@@ -30,6 +30,7 @@ public class FacturaRowMapper implements BiFunction<Row, String, Factura> {
         entity.setTotalSinIva(converter.fromRow(row, prefix + "_total_sin_iva", Double.class));
         entity.setIva(converter.fromRow(row, prefix + "_iva", Double.class));
         entity.setTotalConIva(converter.fromRow(row, prefix + "_total_con_iva", Double.class));
+        entity.setIdCliente(converter.fromRow(row, prefix + "_id_cliente", Long.class));
         return entity;
     }
 }

@@ -87,9 +87,10 @@ entity Cliente {
 }
 entity Factura {
   fecha LocalDate
-    totalSinIva Double
-    iva Double
-    totalConIva Double
+  totalSinIva Double
+  iva Double
+  totalConIva Double
+  idCliente Long
 }
 entity DetalleFactura {
   cantidad Float

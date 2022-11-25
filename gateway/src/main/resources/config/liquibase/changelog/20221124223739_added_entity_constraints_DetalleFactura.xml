@@ -6,7 +6,7 @@
     <!--
         Added the constraints for entity DetalleFactura.
     -->
-    <changeSet id="20221124211514-2" author="jhipster">
+    <changeSet id="20221124223739-2" author="jhipster">
 
         <addForeignKeyConstraint baseColumnNames="factura_id"
                                  baseTableName="detalle_factura"

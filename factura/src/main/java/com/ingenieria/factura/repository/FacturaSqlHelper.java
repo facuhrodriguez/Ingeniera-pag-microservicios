@@ -15,6 +15,7 @@ public class FacturaSqlHelper {
         columns.add(Column.aliased("total_sin_iva", table, columnPrefix + "_total_sin_iva"));
         columns.add(Column.aliased("iva", table, columnPrefix + "_iva"));
         columns.add(Column.aliased("total_con_iva", table, columnPrefix + "_total_con_iva"));
+        columns.add(Column.aliased("id_cliente", table, columnPrefix + "_id_cliente"));
 
         return columns;
     }

@@ -7,23 +7,26 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
-        Added the entity Cliente.
+        Added the entity Producto.
     -->
-    <changeSet id="20221124211614-1" author="jhipster">
-        <createTable tableName="cliente">
+    <changeSet id="20221124223939-1" author="jhipster">
+        <createTable tableName="producto">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="marca" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
             <column name="nombre" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="apellido" type="varchar(255)">
+            <column name="descripcion" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="direccion" type="varchar(255)">
+            <column name="precio" type="${floatType}">
                 <constraints nullable="true" />
             </column>
-            <column name="activo" type="integer">
+            <column name="stock" type="integer">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
@@ -40,17 +43,18 @@
           This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
           Spring Boot configuration key.
     -->
-    <changeSet id="20221124211614-1-data" author="jhipster" context="faker">
+    <changeSet id="20221124223939-1-data" author="jhipster" context="faker">
         <loadData
-                  file="config/liquibase/fake-data/cliente.csv"
+                  file="config/liquibase/fake-data/producto.csv"
                   separator=";"
-                  tableName="cliente"
+                  tableName="producto"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
+            <column name="marca" type="string"/>
             <column name="nombre" type="string"/>
-            <column name="apellido" type="string"/>
-            <column name="direccion" type="string"/>
-            <column name="activo" type="numeric"/>
+            <column name="descripcion" type="string"/>
+            <column name="precio" type="numeric"/>
+            <column name="stock" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

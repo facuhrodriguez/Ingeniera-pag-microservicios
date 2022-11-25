@@ -1,6 +1,6 @@
 {
   "applications": ["gateway", "producto"],
-  "changelogDate": "20221124211515",
+  "changelogDate": "20221124223740",
   "clientRootFolder": "producto",
   "databaseType": "sql",
   "dto": "no",

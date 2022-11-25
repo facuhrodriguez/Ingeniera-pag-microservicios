@@ -35,6 +35,9 @@ public class Factura implements Serializable {
     @Column("total_con_iva")
     private Double totalConIva;
 
+    @Column("id_cliente")
+    private Long idCliente;
+
     @Transient
     @JsonIgnoreProperties(value = { "factura" }, allowSetters = true)
     private Set<DetalleFactura> detalleFacturas = new HashSet<>();
@@ -106,6 +109,19 @@ public class Factura implements Serializable {
         this.totalConIva = totalConIva;
     }
 
+    public Long getIdCliente() {
+        return this.idCliente;
+    }
+
+    public Factura idCliente(Long idCliente) {
+        this.setIdCliente(idCliente);
+        return this;
+    }
+
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
+    }
+
     public Set<DetalleFactura> getDetalleFacturas() {
         return this.detalleFacturas;
     }
@@ -165,6 +181,7 @@ public class Factura implements Serializable {
             ", totalSinIva=" + getTotalSinIva() +
             ", iva=" + getIva() +
             ", totalConIva=" + getTotalConIva() +
+            ", idCliente=" + getIdCliente() +
             "}";
     }
 }

@@ -43,6 +43,9 @@ class FacturaResourceIT {
     private static final Double DEFAULT_TOTAL_CON_IVA = 1D;
     private static final Double UPDATED_TOTAL_CON_IVA = 2D;
 
+    private static final Long DEFAULT_ID_CLIENTE = 1L;
+    private static final Long UPDATED_ID_CLIENTE = 2L;
+
     private static final String ENTITY_API_URL = "/api/facturas";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -71,7 +74,8 @@ class FacturaResourceIT {
             .fecha(DEFAULT_FECHA)
             .totalSinIva(DEFAULT_TOTAL_SIN_IVA)
             .iva(DEFAULT_IVA)
-            .totalConIva(DEFAULT_TOTAL_CON_IVA);
+            .totalConIva(DEFAULT_TOTAL_CON_IVA)
+            .idCliente(DEFAULT_ID_CLIENTE);
         return factura;
     }
 
@@ -86,7 +90,8 @@ class FacturaResourceIT {
             .fecha(UPDATED_FECHA)
             .totalSinIva(UPDATED_TOTAL_SIN_IVA)
             .iva(UPDATED_IVA)
-            .totalConIva(UPDATED_TOTAL_CON_IVA);
+            .totalConIva(UPDATED_TOTAL_CON_IVA)
+            .idCliente(UPDATED_ID_CLIENTE);
         return factura;
     }
 
@@ -130,6 +135,7 @@ class FacturaResourceIT {
         assertThat(testFactura.getTotalSinIva()).isEqualTo(DEFAULT_TOTAL_SIN_IVA);
         assertThat(testFactura.getIva()).isEqualTo(DEFAULT_IVA);
         assertThat(testFactura.getTotalConIva()).isEqualTo(DEFAULT_TOTAL_CON_IVA);
+        assertThat(testFactura.getIdCliente()).isEqualTo(DEFAULT_ID_CLIENTE);
     }
 
     @Test
@@ -181,6 +187,7 @@ class FacturaResourceIT {
         assertThat(testFactura.getTotalSinIva()).isEqualTo(DEFAULT_TOTAL_SIN_IVA);
         assertThat(testFactura.getIva()).isEqualTo(DEFAULT_IVA);
         assertThat(testFactura.getTotalConIva()).isEqualTo(DEFAULT_TOTAL_CON_IVA);
+        assertThat(testFactura.getIdCliente()).isEqualTo(DEFAULT_ID_CLIENTE);
     }
 
     @Test
@@ -208,7 +215,9 @@ class FacturaResourceIT {
             .jsonPath("$.[*].iva")
             .value(hasItem(DEFAULT_IVA.doubleValue()))
             .jsonPath("$.[*].totalConIva")
-            .value(hasItem(DEFAULT_TOTAL_CON_IVA.doubleValue()));
+            .value(hasItem(DEFAULT_TOTAL_CON_IVA.doubleValue()))
+            .jsonPath("$.[*].idCliente")
+            .value(hasItem(DEFAULT_ID_CLIENTE.intValue()));
     }
 
     @Test
@@ -236,7 +245,9 @@ class FacturaResourceIT {
             .jsonPath("$.iva")
             .value(is(DEFAULT_IVA.doubleValue()))
             .jsonPath("$.totalConIva")
-            .value(is(DEFAULT_TOTAL_CON_IVA.doubleValue()));
+            .value(is(DEFAULT_TOTAL_CON_IVA.doubleValue()))
+            .jsonPath("$.idCliente")
+            .value(is(DEFAULT_ID_CLIENTE.intValue()));
     }
 
     @Test
@@ -260,7 +271,12 @@ class FacturaResourceIT {
 
         // Update the factura
         Factura updatedFactura = facturaRepository.findById(factura.getId()).block();
-        updatedFactura.fecha(UPDATED_FECHA).totalSinIva(UPDATED_TOTAL_SIN_IVA).iva(UPDATED_IVA).totalConIva(UPDATED_TOTAL_CON_IVA);
+        updatedFactura
+            .fecha(UPDATED_FECHA)
+            .totalSinIva(UPDATED_TOTAL_SIN_IVA)
+            .iva(UPDATED_IVA)
+            .totalConIva(UPDATED_TOTAL_CON_IVA)
+            .idCliente(UPDATED_ID_CLIENTE);
 
         webTestClient
             .put()
@@ -279,6 +295,7 @@ class FacturaResourceIT {
         assertThat(testFactura.getTotalSinIva()).isEqualTo(UPDATED_TOTAL_SIN_IVA);
         assertThat(testFactura.getIva()).isEqualTo(UPDATED_IVA);
         assertThat(testFactura.getTotalConIva()).isEqualTo(UPDATED_TOTAL_CON_IVA);
+        assertThat(testFactura.getIdCliente()).isEqualTo(UPDATED_ID_CLIENTE);
     }
 
     @Test
@@ -352,7 +369,7 @@ class FacturaResourceIT {
         Factura partialUpdatedFactura = new Factura();
         partialUpdatedFactura.setId(factura.getId());
 
-        partialUpdatedFactura.iva(UPDATED_IVA).totalConIva(UPDATED_TOTAL_CON_IVA);
+        partialUpdatedFactura.iva(UPDATED_IVA).totalConIva(UPDATED_TOTAL_CON_IVA).idCliente(UPDATED_ID_CLIENTE);
 
         webTestClient
             .patch()
@@ -371,6 +388,7 @@ class FacturaResourceIT {
         assertThat(testFactura.getTotalSinIva()).isEqualTo(DEFAULT_TOTAL_SIN_IVA);
         assertThat(testFactura.getIva()).isEqualTo(UPDATED_IVA);
         assertThat(testFactura.getTotalConIva()).isEqualTo(UPDATED_TOTAL_CON_IVA);
+        assertThat(testFactura.getIdCliente()).isEqualTo(UPDATED_ID_CLIENTE);
     }
 
     @Test
@@ -384,7 +402,12 @@ class FacturaResourceIT {
         Factura partialUpdatedFactura = new Factura();
         partialUpdatedFactura.setId(factura.getId());
 
-        partialUpdatedFactura.fecha(UPDATED_FECHA).totalSinIva(UPDATED_TOTAL_SIN_IVA).iva(UPDATED_IVA).totalConIva(UPDATED_TOTAL_CON_IVA);
+        partialUpdatedFactura
+            .fecha(UPDATED_FECHA)
+            .totalSinIva(UPDATED_TOTAL_SIN_IVA)
+            .iva(UPDATED_IVA)
+            .totalConIva(UPDATED_TOTAL_CON_IVA)
+            .idCliente(UPDATED_ID_CLIENTE);
 
         webTestClient
             .patch()
@@ -403,6 +426,7 @@ class FacturaResourceIT {
         assertThat(testFactura.getTotalSinIva()).isEqualTo(UPDATED_TOTAL_SIN_IVA);
         assertThat(testFactura.getIva()).isEqualTo(UPDATED_IVA);
         assertThat(testFactura.getTotalConIva()).isEqualTo(UPDATED_TOTAL_CON_IVA);
+        assertThat(testFactura.getIdCliente()).isEqualTo(UPDATED_ID_CLIENTE);
     }
 
     @Test

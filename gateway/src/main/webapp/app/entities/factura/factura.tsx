@@ -63,6 +63,9 @@ export const Factura = () => {
                 <th>
                   <Translate contentKey="gatewayApp.factura.totalConIva">Total Con Iva</Translate>
                 </th>
+                <th>
+                  <Translate contentKey="gatewayApp.factura.idCliente">Id Cliente</Translate>
+                </th>
                 <th />
               </tr>
             </thead>
@@ -78,6 +81,7 @@ export const Factura = () => {
                   <td>{factura.totalSinIva}</td>
                   <td>{factura.iva}</td>
                   <td>{factura.totalConIva}</td>
+                  <td>{factura.idCliente}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/factura/${factura.id}`} color="info" size="sm" data-cy="entityDetailsButton">

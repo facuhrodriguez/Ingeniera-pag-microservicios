@@ -56,6 +56,12 @@ export const FacturaDetail = () => {
             </span>
           </dt>
           <dd>{facturaEntity.totalConIva}</dd>
+          <dt>
+            <span id="idCliente">
+              <Translate contentKey="facturaApp.facturaFactura.idCliente">Id Cliente</Translate>
+            </span>
+          </dt>
+          <dd>{facturaEntity.idCliente}</dd>
         </dl>
         <Button tag={Link} to="/factura/factura" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

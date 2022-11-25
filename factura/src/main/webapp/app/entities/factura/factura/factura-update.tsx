@@ -109,6 +109,13 @@ export const FacturaUpdate = () => {
                 data-cy="totalConIva"
                 type="text"
               />
+              <ValidatedField
+                label={translate('facturaApp.facturaFactura.idCliente')}
+                id="factura-idCliente"
+                name="idCliente"
+                data-cy="idCliente"
+                type="text"
+              />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/factura/factura" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
