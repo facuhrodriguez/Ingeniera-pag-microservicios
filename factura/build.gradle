@@ -173,6 +173,7 @@ dependencies {
     implementation "commons-beanutils:commons-beanutils:${commonsBeanutilsVersion}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation 'org.json:json:20220924'
     testImplementation "org.testcontainers:junit-jupiter"
     testImplementation "org.testcontainers:testcontainers"
     implementation "org.springdoc:springdoc-openapi-webflux-core"

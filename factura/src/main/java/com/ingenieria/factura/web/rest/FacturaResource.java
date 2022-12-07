@@ -2,12 +2,15 @@ package com.ingenieria.factura.web.rest;
 
 import com.ingenieria.factura.domain.Factura;
 import com.ingenieria.factura.repository.FacturaRepository;
+import com.ingenieria.factura.service.FacturadorService;
 import com.ingenieria.factura.web.rest.errors.BadRequestAlertException;
+import com.ingenieria.factura.service.dto.ordencompra.OrdenCompraDTO;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,9 +41,11 @@ public class FacturaResource {
     private String applicationName;
 
     private final FacturaRepository facturaRepository;
+    private final FacturadorService facturadorService;
 
-    public FacturaResource(FacturaRepository facturaRepository) {
+    public FacturaResource(FacturaRepository facturaRepository, FacturadorService facturadorService) {
         this.facturaRepository = facturaRepository;
+        this.facturadorService = facturadorService;
     }
 
     /**
@@ -230,5 +235,29 @@ public class FacturaResource {
                         .build()
                 )
             );
+    }
+
+    /**
+     * {@code POST  /facturas/facturar} : Facturar un cliente.
+     *
+     * @param idCliente the client to facturate.
+     * @return the {@link ResponseEntity} with status {@code 200 (Ok)} and with body
+     *         the new factura, or with status {@code 400 (Bad Request)} if the
+     *         cliente has already an ID.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PostMapping("/facturas/facturar")
+    public ResponseEntity<Factura> facturarCompra(@RequestParam Long idCliente, @RequestBody OrdenCompraDTO ordenCompraDTO)
+            throws URISyntaxException, BadRequestAlertException {
+        log.info("REST client request to facturar productos : {}", idCliente);
+
+        // llamar al servicio encargado de facturar
+        // enviar respuesta con la factura creada
+        Factura result = facturadorService.run(idCliente, ordenCompraDTO);
+
+        return ResponseEntity
+                .created(new URI("/api/facturas/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+                .body(result);
     }
 }
