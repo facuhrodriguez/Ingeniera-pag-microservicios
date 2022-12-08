@@ -1,6 +1,8 @@
 package com.ingenieria.producto.service;
 
 import com.ingenieria.producto.repository.ProductoRepository;
+import com.ingenieria.producto.service.dto.getprecio.ProductoListDTO;
+import com.ingenieria.producto.service.dto.getprecio.ProductoPrecioDTO;
 import com.ingenieria.producto.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.producto.service.errors.ProductoNoRegistradoException;
 import com.ingenieria.producto.service.errors.StockInsuficienteException;
@@ -11,7 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -56,7 +61,7 @@ public class ProductoService {
     }
 
     public Mono<Void> decrementarStock(long idSolicitud) {
-        log.debug("Producto service: por decrementar productos, id={}", idSolicitud);
+        log.debug("Producto service: por decrementar productos, idSolicitud={}", idSolicitud);
 
         // obtener la orden de compra almacenada previamente
         OrdenCompraDTO ordenCompra = ordenesDeCompraTemp.get(idSolicitud);
@@ -75,8 +80,27 @@ public class ProductoService {
                             }) // guardar cambios en persistencia
                             .doOnSuccess((productoRepository::save));
                 })
-                .doOnComplete(()-> ordenesDeCompraTemp.remove(idSolicitud))
+                .doOnComplete(() -> {
+                    ordenesDeCompraTemp.remove(idSolicitud);
+                    log.debug("Producto service: decremento finalizado idSolicitud={}", idSolicitud);
+                })
                 .then(Mono.empty());
+
+    }
+
+    public Mono<List<ProductoPrecioDTO>> getPrecios(ProductoListDTO productos) {
+        log.debug("Producto service: por obtener listado de precios");
+
+        return Flux.fromIterable(productos.getProductoList())
+                .flatMap((codigoProducto) -> productoRepository
+                        .findById(codigoProducto)
+                        .switchIfEmpty(Mono.error(new ProductoNoRegistradoException(codigoProducto)))
+                        .map(productoEntity ->
+                                new ProductoPrecioDTO(codigoProducto, productoEntity.getPrecio()))
+                )
+                .doOnComplete(() ->
+                        log.debug("Producto service: retornando listado de precios"))
+                .collect(Collectors.toCollection(ArrayList::new));
 
     }
 

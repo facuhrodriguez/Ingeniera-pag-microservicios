@@ -2,6 +2,8 @@ package com.ingenieria.producto.service;
 
 import com.ingenieria.producto.domain.Producto;
 import com.ingenieria.producto.repository.ProductoRepository;
+import com.ingenieria.producto.service.dto.getprecio.ProductoListDTO;
+import com.ingenieria.producto.service.dto.getprecio.ProductoPrecioDTO;
 import com.ingenieria.producto.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.producto.service.dto.ordencompra.ProductoCantidadDTO;
 import com.ingenieria.producto.service.errors.ProductoNoRegistradoException;
@@ -178,6 +180,34 @@ public class ProductoServiceTest {
         int expectedValueStock2 = 99;
         Assertions.assertEquals(expectedValueStock1, p1.getStock());
         Assertions.assertEquals(expectedValueStock2, p2.getStock());
+
+    }
+
+    @Test
+    public void givenProductosList_whenGetPrecios_thenReturnSuccess() {
+        //Arrange
+        ProductoListDTO productos = new ProductoListDTO();
+        productos.setProductoList(List.of(1L, 2L, 3L));
+
+        //Mocks
+        Mockito.when(productoRepository.findById(anyLong()))
+                .thenReturn(Mono.just(p1))
+                .thenReturn(Mono.just(p2))
+                .thenReturn(Mono.just(p3));
+
+        //Act
+        List<ProductoPrecioDTO> result = productoService.getPrecios(productos).block();
+        assert result != null;
+
+        //Assert
+        Mockito.verify(productoRepository, Mockito.times(3)).findById(anyLong());
+
+        ProductoPrecioDTO productoPrecio1 = new ProductoPrecioDTO(1L, 10.f);
+        ProductoPrecioDTO productoPrecio2 = new ProductoPrecioDTO(2L, 15.f);
+        ProductoPrecioDTO productoPrecio3 = new ProductoPrecioDTO(3L, 12.f);
+        List<ProductoPrecioDTO> expectedResult = List.of(productoPrecio1, productoPrecio2, productoPrecio3);
+
+        Assertions.assertTrue(result.containsAll(expectedResult));
 
     }
 

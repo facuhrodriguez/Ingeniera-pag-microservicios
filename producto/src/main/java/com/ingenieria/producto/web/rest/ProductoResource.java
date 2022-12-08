@@ -3,6 +3,8 @@ package com.ingenieria.producto.web.rest;
 import com.ingenieria.producto.domain.Producto;
 import com.ingenieria.producto.repository.ProductoRepository;
 import com.ingenieria.producto.service.ProductoService;
+import com.ingenieria.producto.service.dto.getprecio.ProductoListDTO;
+import com.ingenieria.producto.service.dto.getprecio.ResponsePrecioListDTO;
 import com.ingenieria.producto.service.dto.ordencompra.IdSolicitudDTO;
 import com.ingenieria.producto.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.producto.web.rest.errors.BadRequestAlertException;
@@ -253,16 +255,31 @@ public class ProductoResource {
     }
 
     /**
-     * {@code GET  /productos/decrementar-stock} : check all stock payload.
+     * {@code GET  /productos/decrementar-stock} : decrementar stock.
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the id request.
      */
-    @PostMapping("/productos/decrementar-stock")
-    public Mono<ResponseEntity<Void>> decrementarStock(@RequestBody IdSolicitudDTO idSolicitudDTO) {
-        log.debug("REST request to decrementar stock with id: {}", idSolicitudDTO.getIdSolicitud());
+    @GetMapping("/productos/decrementar-stock?idSolicitud")
+    public Mono<ResponseEntity<Void>> decrementarStock(@RequestParam long idSolicitud) {
+        log.debug("REST request to decrementar stock with id: {}", idSolicitud);
         return productoService
-                .decrementarStock(idSolicitudDTO.getIdSolicitud())
+                .decrementarStock(idSolicitud)
                 .then(Mono.just(ResponseEntity.ok().build()));
+    }
+
+    /**
+     * {@code POST  /productos/get-prices} : obtener listado de precios de productos.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the id request.
+     */
+    @PostMapping("/productos/get-precios")
+    public Mono<ResponseEntity<ResponsePrecioListDTO>> getPrecios(@RequestBody ProductoListDTO productoListDTO) {
+        log.debug("REST request to get precios of: {}", productoListDTO);
+        return productoService
+                .getPrecios(productoListDTO)
+                .map((precios) -> ResponseEntity
+                        .ok()
+                        .body(new ResponsePrecioListDTO(precios)));
     }
 
 
