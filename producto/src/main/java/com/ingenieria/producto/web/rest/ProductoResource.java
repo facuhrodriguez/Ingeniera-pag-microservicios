@@ -238,7 +238,7 @@ public class ProductoResource {
     }
 
     /**
-     * {@code GET  /productos/check-all-stock} : check all stock payload.
+     * {@code POST  /productos/check-all-stock} : check all stock payload.
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the id request.
      */
@@ -250,6 +250,19 @@ public class ProductoResource {
                 .map((idSolicitud) -> ResponseEntity
                         .ok()
                         .body(new IdSolicitudDTO(idSolicitud)));
+    }
+
+    /**
+     * {@code GET  /productos/decrementar-stock} : check all stock payload.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the id request.
+     */
+    @PostMapping("/productos/decrementar-stock")
+    public Mono<ResponseEntity<Void>> decrementarStock(@RequestBody IdSolicitudDTO idSolicitudDTO) {
+        log.debug("REST request to decrementar stock with id: {}", idSolicitudDTO.getIdSolicitud());
+        return productoService
+                .decrementarStock(idSolicitudDTO.getIdSolicitud())
+                .then(Mono.just(ResponseEntity.ok().build()));
     }
 
 

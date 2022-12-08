@@ -55,4 +55,29 @@ public class ProductoService {
 
     }
 
+    public Mono<Void> decrementarStock(long idSolicitud) {
+        log.debug("Producto service: por decrementar productos, id={}", idSolicitud);
+
+        // obtener la orden de compra almacenada previamente
+        OrdenCompraDTO ordenCompra = ordenesDeCompraTemp.get(idSolicitud);
+
+        // recorrer de forma asíncrona los productos y decrementar stock de forma reactiva
+        return Flux.fromIterable(ordenCompra.getProductoCantidadList())
+                .flatMap((productoCantidadDTO) -> {
+                    long codigoProducto = productoCantidadDTO.getId();
+
+                    return productoRepository
+                            .findById(codigoProducto)
+                            .doOnSuccess((productoRegistrado) -> {
+                                // decrementar stock
+                                Integer nuevoStock = productoRegistrado.getStock() - productoCantidadDTO.getCantidad();
+                                productoRegistrado.setStock(nuevoStock);
+                            }) // guardar cambios en persistencia
+                            .doOnSuccess((productoRepository::save));
+                })
+                .doOnComplete(()-> ordenesDeCompraTemp.remove(idSolicitud))
+                .then(Mono.empty());
+
+    }
+
 }

@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
@@ -135,6 +136,48 @@ public class ProductoServiceTest {
 
         //Assert
         assertThat(thrown).isInstanceOf(StockInsuficienteException.class);
+
+    }
+
+    @Test
+    public void givenAOrdenCompra_whenDecrementarStock_thenReturnSuccessfully() {
+        //Arrange
+
+        int cantProd1 = 5;
+        int cantProd2 = 1;
+
+        List<ProductoCantidadDTO> prodCantList = List.of(
+                new ProductoCantidadDTO(p1.getId(), cantProd1),
+                new ProductoCantidadDTO(p2.getId(), cantProd2)
+        );
+
+        OrdenCompraDTO ordenCompra = new OrdenCompraDTO();
+        ordenCompra.setProductoCantidadList(prodCantList);
+
+        //Mocks
+        Mockito.when(productoRepository.findById(anyLong()))
+                .thenReturn(Mono.just(p1))
+                .thenReturn(Mono.just(p2))
+                .thenReturn(Mono.just(p1))
+                .thenReturn(Mono.just(p2));
+
+        Mockito.when(productoRepository.save(any()))
+                .thenReturn(Mono.just(p1))
+                .thenReturn(Mono.just(p2));
+
+        // solo para que ordenCompraTemp esté seteado...
+        long idSolicitud = productoService.checkAllStock(ordenCompra).block();
+
+        //Act
+        productoService.decrementarStock(idSolicitud).block();
+
+        //Assert
+        Mockito.verify(productoRepository, Mockito.times(4)).findById(anyLong());
+
+        int expectedValueStock1 = 95;
+        int expectedValueStock2 = 99;
+        Assertions.assertEquals(expectedValueStock1, p1.getStock());
+        Assertions.assertEquals(expectedValueStock2, p2.getStock());
 
     }
 
