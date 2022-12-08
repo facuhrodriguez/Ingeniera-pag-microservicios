@@ -2,12 +2,15 @@ package com.ingenieria.producto.web.rest;
 
 import com.ingenieria.producto.domain.Producto;
 import com.ingenieria.producto.repository.ProductoRepository;
+import com.ingenieria.producto.service.ProductoService;
+import com.ingenieria.producto.service.dto.ordencompra.IdSolicitudDTO;
+import com.ingenieria.producto.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.producto.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,9 +41,11 @@ public class ProductoResource {
     private String applicationName;
 
     private final ProductoRepository productoRepository;
+    private final ProductoService productoService;
 
-    public ProductoResource(ProductoRepository productoRepository) {
+    public ProductoResource(ProductoRepository productoRepository, ProductoService productoService) {
         this.productoRepository = productoRepository;
+        this.productoService = productoService;
     }
 
     /**
@@ -231,4 +236,21 @@ public class ProductoResource {
                 )
             );
     }
+
+    /**
+     * {@code GET  /productos/check-all-stock} : check all stock payload.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the id request.
+     */
+    @PostMapping("/productos/check-all-stock")
+    public Mono<ResponseEntity<IdSolicitudDTO>> checkAllStock(@RequestBody OrdenCompraDTO ordenCompraDTO) {
+        log.debug("REST request to check all stock: {}", ordenCompraDTO);
+        return productoService
+                .checkAllStock(ordenCompraDTO)
+                .map((idSolicitud) -> ResponseEntity
+                        .ok()
+                        .body(new IdSolicitudDTO(idSolicitud)));
+    }
+
+
 }
