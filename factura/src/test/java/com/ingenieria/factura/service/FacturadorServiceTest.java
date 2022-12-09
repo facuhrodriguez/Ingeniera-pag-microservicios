@@ -4,7 +4,6 @@ import com.ingenieria.factura.domain.DetalleFactura;
 import com.ingenieria.factura.domain.Factura;
 import com.ingenieria.factura.repository.DetalleFacturaRepository;
 import com.ingenieria.factura.repository.FacturaRepository;
-import com.ingenieria.factura.service.dto.getprecio.ProductoListDTO;
 import com.ingenieria.factura.service.dto.getprecio.ResponsePrecioListDTO;
 import com.ingenieria.factura.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.factura.service.dto.ordencompra.ProductoCantidadDTO;
@@ -65,8 +64,8 @@ public class FacturadorServiceTest {
         float precioProd2 = 15.f;
 
         List<ProductoCantidadDTO> prodCantList = List.of(
-                new ProductoCantidadDTO(1L, cantProd1),
-                new ProductoCantidadDTO(2L, cantProd2)
+            new ProductoCantidadDTO(1L, cantProd1),
+            new ProductoCantidadDTO(2L, cantProd2)
         );
 
         OrdenCompraDTO ordenCompra = new OrdenCompraDTO();
@@ -96,26 +95,26 @@ public class FacturadorServiceTest {
 
         //  Mocks
         Mockito.when(facturaRepository.save(Mockito.any(Factura.class)))
-                .thenReturn(Mono.just(f1
-                        .iva(IVA)
-                        .idCliente(idCliente)
-                        .fecha(now)
-                        .id(1L)
-                        .totalSinIva(precioSinIva)
-                        .totalConIva(precioConIva)));
+            .thenReturn(Mono.just(f1
+                .iva(IVA)
+                .idCliente(idCliente)
+                .fecha(now)
+                .id(1L)
+                .totalSinIva(precioSinIva)
+                .totalConIva(precioConIva)));
 
         Mockito.when(facturadorHttpClient.checkAllStock(ordenCompra))
-                .thenReturn(Mono.just(idSolicitud1));
+            .thenReturn(Mono.just(idSolicitud1));
 
         Mockito.when(facturadorHttpClient.decrementarStock(idSolicitud1))
-                .thenReturn(Mono.empty());
+            .thenReturn(Mono.empty());
 
         Mockito.when(facturadorHttpClient.getPrices(any()))
-                .thenReturn(Mono.just(new ResponsePrecioListDTO(precios)));
+            .thenReturn(Mono.just(new ResponsePrecioListDTO(precios)));
 
         Mockito.when(detalleFacRepository.save(any(DetalleFactura.class)))
-                .thenReturn(Mono.just(df1))
-                .thenReturn(Mono.just(df2));
+            .thenReturn(Mono.just(df1))
+            .thenReturn(Mono.just(df2));
 
         //Act
         Factura facturaCreada = facturadorService.run(idCliente, ordenCompra).block();
