@@ -3,7 +3,6 @@ package com.ingenieria.producto.service;
 import com.ingenieria.producto.domain.Producto;
 import com.ingenieria.producto.repository.ProductoRepository;
 import com.ingenieria.producto.service.dto.getprecio.ProductoListDTO;
-import com.ingenieria.producto.service.dto.getprecio.ProductoPrecioDTO;
 import com.ingenieria.producto.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.producto.service.dto.ordencompra.ProductoCantidadDTO;
 import com.ingenieria.producto.service.errors.ProductoNoRegistradoException;
@@ -18,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -196,18 +196,20 @@ public class ProductoServiceTest {
                 .thenReturn(Mono.just(p3));
 
         //Act
-        List<ProductoPrecioDTO> result = productoService.getPrecios(productos).block();
+        HashMap<Long, Float> result = productoService.getPrecios(productos).block();
         assert result != null;
 
         //Assert
         Mockito.verify(productoRepository, Mockito.times(3)).findById(anyLong());
 
-        ProductoPrecioDTO productoPrecio1 = new ProductoPrecioDTO(1L, 10.f);
-        ProductoPrecioDTO productoPrecio2 = new ProductoPrecioDTO(2L, 15.f);
-        ProductoPrecioDTO productoPrecio3 = new ProductoPrecioDTO(3L, 12.f);
-        List<ProductoPrecioDTO> expectedResult = List.of(productoPrecio1, productoPrecio2, productoPrecio3);
+        HashMap<Long, Float> expectedValues = new HashMap<>();
+        expectedValues.put(1L, 10.f);
+        expectedValues.put(2L, 15.f);
+        expectedValues.put(3L, 12.f);
 
-        Assertions.assertTrue(result.containsAll(expectedResult));
+        Assertions.assertEquals(result.get(1L), expectedValues.get(1L));
+        Assertions.assertEquals(result.get(2L), expectedValues.get(2L));
+        Assertions.assertEquals(result.get(3L), expectedValues.get(3L));
 
     }
 

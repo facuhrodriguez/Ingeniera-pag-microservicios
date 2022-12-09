@@ -13,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,7 +86,7 @@ public class ProductoService {
 
     }
 
-    public Mono<List<ProductoPrecioDTO>> getPrecios(ProductoListDTO productos) {
+    public Mono<HashMap<Long, Float>> getPrecios(ProductoListDTO productos) {
         log.debug("Producto service: por obtener listado de precios");
 
         return Flux.fromIterable(productos.getProductoList())
@@ -100,7 +98,7 @@ public class ProductoService {
                 )
                 .doOnComplete(() ->
                         log.debug("Producto service: retornando listado de precios"))
-                .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toMap(ProductoPrecioDTO::getId, ProductoPrecioDTO::getPrecio, Float::sum, HashMap::new));
 
     }
 

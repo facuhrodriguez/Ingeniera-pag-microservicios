@@ -1,6 +1,8 @@
 package com.ingenieria.factura.service.httpclient.ordencompra;
 
 import com.ingenieria.factura.service.FacturadorService;
+import com.ingenieria.factura.service.dto.getprecio.ProductoListDTO;
+import com.ingenieria.factura.service.dto.getprecio.ResponsePrecioListDTO;
 import com.ingenieria.factura.service.dto.ordencompra.OrdenCompraDTO;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -26,67 +28,61 @@ public class FacturadorHttpClient {
         this.webClient = webClientBuilder.build();
     }
 
-    public long checkAllStock(OrdenCompraDTO ordenCompraDTO) throws WebClientException {
+    public Mono<Long> checkAllStock(OrdenCompraDTO ordenCompraDTO) throws WebClientException {
         log.debug("FacturadorHttpClient: solicitando chequear el stock...");
 
         var msProductoInstance = discoveryClient.getInstances("producto").get(0);
 
         var uri = URI.create(msProductoInstance.getUri() + "/productos/check-all-stock");
 
-        JSONObject jsonResult = webClient.post()
+        final long[] idSolicitud = {0L};
+
+        return webClient.post()
                 .uri(uri)
                 .header("Content-Type", "application/json")
                 .bodyValue(ordenCompraDTO.toString())
                 .retrieve()
                 .bodyToMono(JSONObject.class)
-                .block(); // wait for the async request
+                .doOnSuccess((jsonResult) -> {
+                    // jsonResult = { "idSolicitud": 123124 }
+                    idSolicitud[0] = (long) jsonResult.get("idSolicitud");
+                    log.debug("FacturadorHttpClient: stock checkeado! idSolicitud={}", idSolicitud[0]);
+                })
+                .thenReturn(idSolicitud[0]);
 
-        assert jsonResult != null;
-        // json = { "idSolicitud": 123124 }
-        long idSolicitud = new JSONObject(jsonResult).getLong("idSolicitud");
-
-        log.debug("FacturadorHttpClient: stock checkeado! idSolicitud={}", idSolicitud);
-
-        return idSolicitud;
     }
 
-    public Mono<String> decreaseAllStock(long idSolicitud) throws WebClientException {
+    public Mono<Void> decrementarStock(long idSolicitud) throws WebClientException {
         log.debug("FacturadorHttpClient: enviando solicitud para decrementar el stock...");
 
         var msProductoInstance = discoveryClient.getInstances("producto").get(0);
 
-        var uri = URI.create(msProductoInstance.getUri() + "/productos/decrease-all-stock?idSolicitud=" + idSolicitud);
+        var uri = URI.create(msProductoInstance.getUri() + "/productos/decrementar-stock?idSolicitud=" + idSolicitud);
 
         return webClient.get()
                 .uri(uri)
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(Void.class);
     }
 
-    public JSONObject getPrices(String listaProductos) {
+    public Mono<ResponsePrecioListDTO> getPrices(ProductoListDTO productos) {
         log.debug("FacturadorHttpClient: enviando solicitud para obtener listado de precios...");
 
         var msProductoInstance = discoveryClient.getInstances("producto").get(0);
 
-        var uri = URI.create(msProductoInstance.getUri() + "/productos/get-prices");
+        var uri = URI.create(msProductoInstance.getUri() + "/productos/get-precios");
 
+        // json= {
+        // 		   precios: HashMap {"id": "productid1", precio: 10.0} , {"id": "productid2", precio: 20.0}
+        //       }
 
-        JSONObject jsonResult = webClient.post()
+        return webClient.post()
                 .uri(uri)
                 .header("Content-Type", "application/json")
-                .bodyValue(listaProductos)
+                .bodyValue(productos)
                 .retrieve()
-                .bodyToMono(JSONObject.class)
-                .block();
-
-        assert jsonResult != null;
-        // jsonResult = { "productid1": 10.0,
-        //                "productid2": 20.0
-        //              }
-
-        log.debug("FacturadorHttpClient: listado de precios obtenido!");
-
-        return jsonResult;
+                .bodyToMono(ResponsePrecioListDTO.class)
+                .doOnSuccess((r) -> log.debug("FacturadorHttpClient: listado de precios obtenido!"));
     }
 
 }

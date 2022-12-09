@@ -1,4 +1,4 @@
-package com.ingenieria.producto.service.dto.getprecio;
+package com.ingenieria.factura.service.dto.getprecio;
 
 import java.io.Serializable;
 import java.util.HashMap;
