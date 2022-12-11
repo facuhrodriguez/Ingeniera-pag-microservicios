@@ -1,0 +1,846 @@
+{
+	"info": {
+		"_postman_id": "6411c6a8-bead-41c1-90e7-22a0ecd952c3",
+		"name": "Ingeniería de Software Final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18050609"
+	},
+	"item": [
+		{
+			"name": "Telefono",
+			"item": [
+				{
+					"name": "Create Telefono",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"codigoArea\": 249,\r\n    \"nroTelefono\": 112233,\r\n    \"tipo\": \"Celular\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/{{ms-cliente}}/api/telefonos?client_id=3",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-cliente}}",
+								"api",
+								"telefonos"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{authToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "Crear Cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Facundo\",\r\n    \"apellido\": \"Rodríguez\",\r\n    \"direccion\": \"Rivadavia 551\",\r\n    \"activo\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/{{ms-cliente}}/api/clientes",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-cliente}}",
+								"api",
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Cliente Wanda",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Wanda\",\r\n    \"apellido\": \"Baker\",\r\n    \"direccion\": \"Av. 9 de Julio 456\",\r\n    \"activo\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/{{ms-cliente}}/api/clientes",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-cliente}}",
+								"api",
+								"clientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Clientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway}}/{{ms-cliente}}/api/clientes/",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-cliente}}",
+								"api",
+								"clientes",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cliente by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway}}/{{ms-cliente}}/api/clientes/:id",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-cliente}}",
+								"api",
+								"clientes",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{authToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Factura",
+			"item": [
+				{
+					"name": "Crear nueva factura",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY2NjIxNzg4N30.SzmczYh9v8gm7XATI-AiHcijEdI8Kh53F5kcgxhjMy-7R_cpfI4A192RcksR2h4Ynzr00CInd73YjY9MJPKQOQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fecha\": \"2022-11-04\",\r\n    \"totalSinIva\": 25.4,\r\n    \"iva\": 21.1,\r\n    \"totalConIva\": 56.71\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/{{ms-factura}}/api/facturas/?client_id=1",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-factura}}",
+								"api",
+								"facturas",
+								""
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Facturas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY2NjIxNzg4N30.SzmczYh9v8gm7XATI-AiHcijEdI8Kh53F5kcgxhjMy-7R_cpfI4A192RcksR2h4Ynzr00CInd73YjY9MJPKQOQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/{{ms-factura}}/api/facturas",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-factura}}",
+								"api",
+								"facturas"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{authToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "DetalleFactura",
+			"item": [
+				{
+					"name": "Get All DetalleFacturas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway}}/{{ms-factura}}/api/detalle-facturas",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-factura}}",
+								"api",
+								"detalle-facturas"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Producto",
+			"item": [
+				{
+					"name": "Crear Producto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"marca\": \"Coca-Cola\",\r\n    \"nombre\": \"Gaseosa\",\r\n    \"descripcion\": \"Gaseosa Coca-Cola de 3l\",\r\n    \"precio\": 910.10,\r\n    \"stock\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/{{ms-producto}}/api/productos",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-producto}}",
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Producto 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"marca\": \"Pepsi\",\r\n    \"nombre\": \"Gaseosa\",\r\n    \"descripcion\": \"Pepsi cola de 2,25l\",\r\n    \"precio\": 600.0,\r\n    \"stock\": 25\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/{{ms-producto}}/api/productos",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-producto}}",
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Productos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/{{ms-producto}}/api/productos",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-producto}}",
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Just Check All Stock",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productoCantidadList\": [\n        {\n            \"id\": 1,\n            \"cantidad\": 1\n        },\n        {\n            \"id\": 2,\n            \"cantidad\": 1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway}}/{{ms-producto}}/api/productos/check-all-stock",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-producto}}",
+								"api",
+								"productos",
+								"check-all-stock"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Producto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{gateway}}/{{ms-producto}}/api/productos/3",
+							"host": [
+								"{{gateway}}"
+							],
+							"path": [
+								"{{ms-producto}}",
+								"api",
+								"productos",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{authToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"authToken\", jsonData.id_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gateway}}/api/authenticate",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"api",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Facturar una orden de compra",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productoCantidadList\": [\r\n        {\r\n            \"id\": 1,\r\n            \"cantidad\": 5\r\n        },\r\n        {\r\n            \"id\": 2,\r\n            \"cantidad\": 6\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{gateway}}/{{ms-factura}}/api/facturas/facturar?idCliente=1",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"{{ms-factura}}",
+						"api",
+						"facturas",
+						"facturar"
+					],
+					"query": [
+						{
+							"key": "idCliente",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-1 Get Telefono by Nombre y Apellido",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway}}/{{ms-cliente}}/api/telefono?nombre=Wanda&apellido=Baker",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"{{ms-cliente}}",
+						"api",
+						"telefono"
+					],
+					"query": [
+						{
+							"key": "nombre",
+							"value": "Wanda"
+						},
+						{
+							"key": "apellido",
+							"value": "Baker"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-2 Get Clientes con facturas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway}}/{{ms-factura}}/api/factura/clientes-con-facturas",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"{{ms-factura}}",
+						"api",
+						"factura",
+						"clientes-con-facturas"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-3 Get All clientes sin facturas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-4 Get All Productos facturados",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway}}/{{ms-factura}}/api/factura/productos-facturados",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"{{ms-factura}}",
+						"api",
+						"factura",
+						"productos-facturados"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-5 Get All Clientes con Telefonos y sin Facturas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway}}/{{ms-cliente}}/api/clientes",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"{{ms-cliente}}",
+						"api",
+						"clientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-6 Get All Clientes con número total de Facturas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-7 Get All Facturas By Nombre",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway}}/{{ms-factura}}/api/facturas/?nombre=Facundo&apellido=Rodriguez",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"{{ms-factura}}",
+						"api",
+						"facturas",
+						""
+					],
+					"query": [
+						{
+							"key": "nombre",
+							"value": "Facundo"
+						},
+						{
+							"key": "apellido",
+							"value": "Rodriguez"
+						},
+						{
+							"key": "marca",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-8 Get All Facturas By Marca",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway}}/{{ms-factura}}/api/facturas/?marca=Coca-cola",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"{{ms-factura}}",
+						"api",
+						"facturas",
+						""
+					],
+					"query": [
+						{
+							"key": "marca",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "marca",
+							"value": "Coca-cola"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-9 Get All Telefonos con Clientes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway}}/{{ms-cliente}}/api/clientes/all-telefonos",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"{{ms-cliente}}",
+						"api",
+						"clientes",
+						"all-telefonos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SQL-10 Get All Clientes con el total de gastos con IVA de sus facturas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{gateway}}/{{ms-cliente}}/api/clientes/con-gasto-total-iva",
+					"host": [
+						"{{gateway}}"
+					],
+					"path": [
+						"{{ms-cliente}}",
+						"api",
+						"clientes",
+						"con-gasto-total-iva"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
