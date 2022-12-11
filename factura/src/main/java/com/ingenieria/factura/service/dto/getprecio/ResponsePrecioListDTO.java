@@ -6,6 +6,8 @@ import java.util.HashMap;
 public class ResponsePrecioListDTO implements Serializable {
     private HashMap<Long, Float> precios;
 
+    public ResponsePrecioListDTO(){}
+
     public ResponsePrecioListDTO(HashMap<Long, Float> precios) {
         this.precios = precios;
     }

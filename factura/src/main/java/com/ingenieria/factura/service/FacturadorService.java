@@ -12,9 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @Service
@@ -39,7 +41,7 @@ public class FacturadorService {
     }
 
     public Mono<Factura> run(Long idCliente, OrdenCompraDTO ordenCompraDTO) throws BadRequestAlertException {
-        log.info("Facturador service: el cliente {} desea generar una orden de compra, con lo siguiente. " + "{}", idCliente, ordenCompraDTO);
+        log.info("Facturador service: el cliente {} desea generar una orden de compra, con lo siguiente. {}", idCliente, ordenCompraDTO);
 
         // almacenar una factura incompleta
         Factura factura = new Factura();
@@ -51,44 +53,62 @@ public class FacturadorService {
         return facturadorHttpClient.checkAllStock(ordenCompraDTO)
                 // retorna un id de solicitud para decrementar ESE stock
                 .doOnSuccess(facturadorHttpClient::decrementarStock)
-                .doOnSuccess((idSolicitud) -> log.debug("Facturador service: stock decrementado! id={}", idSolicitud))
                 // obtener precios de todos los productos
                 .then(facturadorHttpClient.getPrices(new ProductoListDTO(ordenCompraDTO.getListProductsOnly())))
                 .flatMap((response) -> {
 
-                        //factura = facturaRepository.save(factura).block();
+                    ArrayList<DetalleFactura> dfs = new ArrayList<>();
 
-                        HashMap<Long, Float> prices = response.getPrecios();
-                        double precioFinal = ordenCompraDTO.getProductoCantidadList()
-                                .stream()
-                                .map((productoCantidadDTO) -> {
-                                    long codigoProducto = productoCantidadDTO.getId();
-                                    float cantidad = productoCantidadDTO.getCantidad();
-                                    double precioUnitario = prices.get(codigoProducto);
+                    HashMap<Long, Float> prices = response.getPrecios();
+                    double precioFinal = ordenCompraDTO.getProductoCantidadList()
+                            .stream()
+                            .peek(productoCantidadDTO -> {
+                                long codigoProducto = productoCantidadDTO.getId();
+                                float cantidad = productoCantidadDTO.getCantidad();
 
-                                    // calculo de precio parcial y total
-                                    double precioTemp = precioUnitario * cantidad;
+                                // crear y almacenar el detalle factura del producto
+                                DetalleFactura detalleFactura = new DetalleFactura();
+                                detalleFactura.setCantidad(cantidad);
+                                detalleFactura.setIdProducto(codigoProducto);
+                                detalleFactura.setFactura(factura);
+                                dfs.add(detalleFactura);
+                            })
+                            .map((productoCantidadDTO) -> {
+                                long codigoProducto = productoCantidadDTO.getId();
+                                float cantidad = productoCantidadDTO.getCantidad();
+                                double precioUnitario = prices.get(codigoProducto);
 
-                                    // crear y almacenar el detalle factura del producto
-                                    DetalleFactura detalleFactura = new DetalleFactura();
-                                    detalleFactura.setCantidad(cantidad);
-                                    detalleFactura.setIdProducto(codigoProducto);
-                                    detalleFactura.setFactura(factura);
+                                // calculo de precio parcial y total
+                                double precioTemp = precioUnitario * cantidad;
 
-                                    detalleFacRepository.save(detalleFactura)
-                                            .doOnSuccess((factura::addDetalleFactura));
+                                return calcularDescuento(precioTemp, cantidad);
+                            })
+                            .reduce(0.0, Double::sum, Double::sum);
 
-                                    return calcularDescuento(precioTemp, cantidad);
-                                })
-                                .reduce(0.0, Double::sum, Double::sum);
+                    factura.setTotalSinIva(precioFinal);
+                    factura.setTotalConIva(this.calcularPrecioConIVA(precioFinal));
 
-                        factura.setTotalSinIva(precioFinal);
-                        factura.setTotalConIva(this.calcularPrecioConIVA(precioFinal));
+                    return facturaRepository.save(factura)
+                            .flatMap(factura1 ->
+                                Flux.fromIterable(dfs)
+                                        .flatMap(detalleFacRepository::save)
+                                        .doOnNext(factura::addDetalleFactura)
+                                        .doOnComplete(() -> log.debug("Facturador service: detalle facturas creadas"))
+                                                .then(Mono.just(factura1))
+                                                        .doOnSuccess((factura2) -> log.debug("Facturador service: factura creada {}", factura2))
+                                );
 
-                        log.debug("Facturador service: factura creada {}", factura);
 
-                        return facturaRepository.save(factura);
-                    });
+                    /*return Flux.fromIterable(dfs)
+                            .flatMap(detalleFacRepository::save)
+                            .map(factura::addDetalleFactura)
+                            .then(facturaRepository.save(factura)
+                                            .flatMap((factura1) -> {
+                                                log.debug("Facturador service: factura creada {}", factura1);
+                                                return Mono.just(factura1);
+                                            })
+                            );*/
+                });
     }
 
     private double calcularPrecioConIVA(double precio) {

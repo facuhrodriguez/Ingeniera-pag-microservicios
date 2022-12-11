@@ -17,7 +17,9 @@ public class OrdenCompraDTO implements Serializable {
 
     @Override
     public String toString() {
-        return productoCantidadList.toString();
+        return productoCantidadList.stream()
+                .map(ProductoCantidadDTO::toString)
+                .collect(Collectors.joining());
     }
 
     public List<Long> getListProductsOnly() {

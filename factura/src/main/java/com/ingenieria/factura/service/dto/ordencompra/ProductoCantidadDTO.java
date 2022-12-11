@@ -1,7 +1,5 @@
 package com.ingenieria.factura.service.dto.ordencompra;
 
-import org.json.JSONObject;
-
 import java.io.Serializable;
 
 public class ProductoCantidadDTO implements Serializable {
@@ -12,7 +10,6 @@ public class ProductoCantidadDTO implements Serializable {
         this.id = id;
         this.cantidad = cantidad;
     }
-
 
     public Long getId() {
         return id;
@@ -35,10 +32,4 @@ public class ProductoCantidadDTO implements Serializable {
         return "{ id=" + id + ", cantidad=" + cantidad + " }";
     }
 
-    public JSONObject toJSON() {
-        JSONObject json = new JSONObject();
-        json.put("id", id);
-        json.put("cantidad", cantidad);
-        return json;
-    }
 }

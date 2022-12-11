@@ -3,10 +3,11 @@ package com.ingenieria.factura.service.httpclient.ordencompra;
 import com.ingenieria.factura.service.FacturadorService;
 import com.ingenieria.factura.service.dto.getprecio.ProductoListDTO;
 import com.ingenieria.factura.service.dto.getprecio.ResponsePrecioListDTO;
+import com.ingenieria.factura.service.dto.ordencompra.IdSolicitudDTO;
 import com.ingenieria.factura.service.dto.ordencompra.OrdenCompraDTO;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -23,6 +24,9 @@ public class FacturadorHttpClient {
     private final WebClient webClient;
     private final Logger log = LoggerFactory.getLogger(FacturadorService.class);
 
+    @Value("${jhipster.security.authentication.jwt.base64-secret}")
+    private String jwtBase64;
+
     public FacturadorHttpClient(DiscoveryClient discoveryClient, WebClient.Builder webClientBuilder) {
         this.discoveryClient = discoveryClient;
         this.webClient = webClientBuilder.build();
@@ -33,22 +37,21 @@ public class FacturadorHttpClient {
 
         var msProductoInstance = discoveryClient.getInstances("producto").get(0);
 
-        var uri = URI.create(msProductoInstance.getUri() + "/productos/check-all-stock");
-
-        final long[] idSolicitud = {0L};
+        var uri = URI.create(msProductoInstance.getUri() + "/api/productos/check-all-stock");
 
         return webClient.post()
                 .uri(uri)
                 .header("Content-Type", "application/json")
-                .bodyValue(ordenCompraDTO.toString())
+                .header("Authorization", String.format("Bearer %s", jwtBase64))
+                .bodyValue(ordenCompraDTO)
                 .retrieve()
-                .bodyToMono(JSONObject.class)
-                .doOnSuccess((jsonResult) -> {
-                    // jsonResult = { "idSolicitud": 123124 }
-                    idSolicitud[0] = (long) jsonResult.get("idSolicitud");
-                    log.debug("FacturadorHttpClient: stock checkeado! idSolicitud={}", idSolicitud[0]);
-                })
-                .thenReturn(idSolicitud[0]);
+                .bodyToMono(IdSolicitudDTO.class)
+                .flatMap((idSolicitudDTO) -> {
+                    // { "idSolicitud": 123124 }
+                    Long idSolicitud = idSolicitudDTO.getIdSolicitud();
+                    log.debug("FacturadorHttpClient: stock checkeado! idSolicitud={}", idSolicitud);
+                    return Mono.just(idSolicitud);
+                });
 
     }
 
@@ -57,12 +60,14 @@ public class FacturadorHttpClient {
 
         var msProductoInstance = discoveryClient.getInstances("producto").get(0);
 
-        var uri = URI.create(msProductoInstance.getUri() + "/productos/decrementar-stock?idSolicitud=" + idSolicitud);
+        var uri = URI.create(msProductoInstance.getUri() + "/api/productos/decrementar-stock?idSolicitud=" + idSolicitud);
 
         return webClient.get()
                 .uri(uri)
+                .header("Authorization", String.format("Bearer %s", jwtBase64))
                 .retrieve()
-                .bodyToMono(Void.class);
+                .bodyToMono(Void.class)
+                .doOnSuccess((mono) -> log.debug("Facturador service: stock decrementado! id={}", idSolicitud));
     }
 
     public Mono<ResponsePrecioListDTO> getPrices(ProductoListDTO productos) {
@@ -70,7 +75,7 @@ public class FacturadorHttpClient {
 
         var msProductoInstance = discoveryClient.getInstances("producto").get(0);
 
-        var uri = URI.create(msProductoInstance.getUri() + "/productos/get-precios");
+        var uri = URI.create(msProductoInstance.getUri() + "/api/productos/get-precios");
 
         // json= {
         // 		   precios: HashMap {"id": "productid1", precio: 10.0} , {"id": "productid2", precio: 20.0}
@@ -79,6 +84,7 @@ public class FacturadorHttpClient {
         return webClient.post()
                 .uri(uri)
                 .header("Content-Type", "application/json")
+                .header("Authorization", String.format("Bearer %s", jwtBase64))
                 .bodyValue(productos)
                 .retrieve()
                 .bodyToMono(ResponsePrecioListDTO.class)

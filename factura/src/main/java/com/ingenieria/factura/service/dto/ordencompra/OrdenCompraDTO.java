@@ -1,7 +1,5 @@
 package com.ingenieria.factura.service.dto.ordencompra;
 
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,17 +17,9 @@ public class OrdenCompraDTO implements Serializable {
 
     @Override
     public String toString() {
-        return toJSON().toString();
-    }
-
-    public JSONObject toJSON() {
-
-        var lis = productoCantidadList
-                .stream()
-                .map(ProductoCantidadDTO::toJSON)
-                .collect(Collectors.toList());
-
-        return new JSONObject(lis);
+        return productoCantidadList.stream()
+                .map(ProductoCantidadDTO::toString)
+                .collect(Collectors.joining());
     }
 
     public List<Long> getListProductsOnly() {
