@@ -2,24 +2,23 @@ package com.ingenieria.cliente.web.rest;
 
 import com.ingenieria.cliente.domain.Cliente;
 import com.ingenieria.cliente.repository.ClienteRepository;
+import com.ingenieria.cliente.service.dto.getclientes.IdClienteListDTO;
 import com.ingenieria.cliente.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * REST controller for managing {@link com.ingenieria.cliente.domain.Cliente}.
@@ -175,30 +174,34 @@ public class ClienteResource {
     /**
      * {@code GET  /clientes} : get all the clientes.
      *
-     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of clientes in body.
      */
     @GetMapping("/clientes")
-    public Mono<List<Cliente>> getAllClientes(@RequestParam(required = false) String filter) {
-        if ("telefono-is-null".equals(filter)) {
-            log.debug("REST request to get all Clientes where telefono is null");
-            return StreamSupport
-                .stream(clienteRepository.findAll().spliterator(), false)
-                .filter(cliente -> cliente.getTelefono() == null)
-                .collect(Collectors.toList());
-        }
+    public Mono<List<Cliente>> getAllClientes() {
         log.debug("REST request to get all Clientes");
         return clienteRepository.findAll().collectList();
     }
 
     /**
-     * {@code GET  /clientes} : get all the clientes as a stream.
-     * @return the {@link Flux} of clientes.
+     * {@code GET  /clientes/ids?nombre&apellido} : get a client filtering by nombre & apellido.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of clientes in body.
      */
-    @GetMapping(value = "/clientes", produces = MediaType.APPLICATION_NDJSON_VALUE)
-    public Flux<Cliente> getAllClientesAsStream() {
-        log.debug("REST request to get all Clientes as a stream");
-        return clienteRepository.findAll();
+    @GetMapping("/clientes/ids")
+    public Mono<IdClienteListDTO> getAllIdClientes(@RequestParam(required = false) String nombre, @RequestParam(required = false) String apellido) {
+        IdClienteListDTO idList = new IdClienteListDTO();
+        if (nombre == null || apellido == null) {
+            log.debug("REST request to get all Clientes");
+            return clienteRepository.findAll()
+                .doOnNext(cliente -> idList.getIdCliente().add(Long.valueOf(cliente.getId())))
+                .then(Mono.just(idList));
+        }
+        log.debug("REST request to get a client like {}, {}", nombre, apellido);
+        String nombreRegex = ".*" + nombre + ".*";
+        String apellidoRegex = ".*" + apellido + ".*";
+        return clienteRepository.findByNombreRegexAndApellidoRegex(nombreRegex, apellidoRegex)
+            .doOnNext(cliente -> idList.getIdCliente().add(cliente.getId()))
+            .then(Mono.just(idList));
     }
 
     /**
