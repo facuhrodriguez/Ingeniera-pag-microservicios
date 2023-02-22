@@ -2,8 +2,6 @@ package com.ingenieria.factura.repository;
 
 import com.ingenieria.factura.domain.Factura;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -26,6 +24,8 @@ public interface FacturaRepository extends ReactiveCrudRepository<Factura, Long>
 
     @Override
     Mono<Void> deleteById(Long id);
+
+    Flux<Factura> findAllByIdCliente(String idCliente);
 }
 
 interface FacturaRepositoryInternal {

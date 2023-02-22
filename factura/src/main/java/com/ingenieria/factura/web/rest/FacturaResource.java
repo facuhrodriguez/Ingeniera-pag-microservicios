@@ -2,6 +2,7 @@ package com.ingenieria.factura.web.rest;
 
 import com.ingenieria.factura.domain.Factura;
 import com.ingenieria.factura.repository.FacturaRepository;
+import com.ingenieria.factura.service.FacturaService;
 import com.ingenieria.factura.service.FacturadorService;
 import com.ingenieria.factura.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.factura.web.rest.errors.BadRequestAlertException;
@@ -9,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,6 @@ import tech.jhipster.web.util.reactive.ResponseUtil;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -41,10 +40,12 @@ public class FacturaResource {
 
     private final FacturaRepository facturaRepository;
     private final FacturadorService facturadorService;
+    private final FacturaService facturaService;
 
-    public FacturaResource(FacturaRepository facturaRepository, FacturadorService facturadorService) {
+    public FacturaResource(FacturaRepository facturaRepository, FacturadorService facturadorService, FacturaService facturaService) {
         this.facturaRepository = facturaRepository;
         this.facturadorService = facturadorService;
+        this.facturaService = facturaService;
     }
 
     /**
@@ -182,24 +183,18 @@ public class FacturaResource {
     }
 
     /**
-     * {@code GET  /facturas} : get all the facturas.
+     * {@code GET  /facturas?nombre&apellido} : get all the facturas filtering by an optional name and lastname params.
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of facturas in body.
      */
     @GetMapping("/facturas")
-    public Mono<List<Factura>> getAllFacturas() {
-        log.debug("REST request to get all Facturas");
-        return facturaRepository.findAll().collectList();
-    }
-
-    /**
-     * {@code GET  /facturas} : get all the facturas as a stream.
-     * @return the {@link Flux} of facturas.
-     */
-    @GetMapping(value = "/facturas", produces = MediaType.APPLICATION_NDJSON_VALUE)
-    public Flux<Factura> getAllFacturasAsStream() {
-        log.debug("REST request to get all Facturas as a stream");
-        return facturaRepository.findAll();
+    public Flux<Factura> getAllFacturas(@RequestParam(required = false) String nombre, @RequestParam(required = false) String apellido) {
+        if (nombre == null || apellido == null) {
+            log.debug("REST request to get all Facturas");
+            return facturaRepository.findAll();
+        }
+        log.debug("REST request to get all Facturas with client owner like {}, {}", nombre, apellido);
+        return facturaService.run(nombre, apellido);
     }
 
     /**
@@ -241,27 +236,27 @@ public class FacturaResource {
      *
      * @param idCliente the client to facturate.
      * @return the {@link ResponseEntity} with status {@code 200 (Ok)} and with body
-     *         the new factura, or with status {@code 400 (Bad Request)} if the
-     *         cliente has already an ID.
+     * the new factura, or with status {@code 400 (Bad Request)} if the
+     * cliente has already an ID.
      */
     @PostMapping("/facturas/facturar")
     public Mono<ResponseEntity<Factura>> facturarCompra(@RequestParam Long idCliente, @RequestBody OrdenCompraDTO ordenCompraDTO)
-            throws BadRequestAlertException {
+        throws BadRequestAlertException {
         log.info("REST client request to facturar productos : {}", idCliente);
 
         // llamar al servicio encargado de facturar
         // enviar respuesta con la factura creada
 
         return facturadorService.run(idCliente, ordenCompraDTO)
-                .map(result -> {
-                    try {
-                        return ResponseEntity
-                                .created(new URI("/api/facturas/" + result.getId()))
-                                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-                                .body(result);
-                    } catch (URISyntaxException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+            .map(result -> {
+                try {
+                    return ResponseEntity
+                        .created(new URI("/api/facturas/" + result.getId()))
+                        .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+                        .body(result);
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+            });
     }
 }
