@@ -276,11 +276,24 @@ public class ProductoResource {
     public Mono<ResponseEntity<ResponsePrecioListDTO>> getPrecios(@RequestBody ProductoListDTO productoListDTO) {
         log.debug("REST request to get precios of: {}", productoListDTO);
         return productoService
-                .getPrecios(productoListDTO)
-                .map((precios) -> ResponseEntity
-                        .ok()
-                        .body(new ResponsePrecioListDTO(precios)));
+            .getPrecios(productoListDTO)
+            .map((precios) -> ResponseEntity
+                .ok()
+                .body(new ResponsePrecioListDTO(precios)));
     }
 
+    /**
+     * {@code GET  /productos/ids?marca} : get all id products filtering with marca param.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the id request.
+     */
+    @GetMapping("/productos/ids")
+    public Mono<ProductoListDTO> getAllId(@RequestParam(required = false, defaultValue = "") String marca) {
+        ProductoListDTO r = new ProductoListDTO();
+        log.debug("REST request to get all product ids with marca: {}", marca);
+        return productoRepository.getAllIdByMarca(marca)
+            .map(id -> r.getProductoList().add(id))
+            .then(Mono.just(r));
+    }
 
 }
