@@ -53,7 +53,7 @@ public class FacturadorServiceTest {
     @Test
     public void givenOrdenCompra_whenRun_thenFacturacionIsSuccess() {
         //Arrange
-        Long idCliente = 14L;
+        String idCliente = "14";
 
         // prod sin dto x cantidad
         int cantProd1 = 1;

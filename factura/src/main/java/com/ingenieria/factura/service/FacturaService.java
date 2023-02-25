@@ -46,8 +46,7 @@ public class FacturaService {
             .retrieve()
             .bodyToMono(IdClienteListDTO.class)
             .map((idClienteListDTO) -> {
-                // { "idCliente": [1, 2] }
-                List<Long> ids = idClienteListDTO.getIdCliente();
+                List<String> ids = idClienteListDTO.getIdCliente();
                 log.debug("Factura service: id_clients obtenidos {}", ids);
                 return ids;
             })

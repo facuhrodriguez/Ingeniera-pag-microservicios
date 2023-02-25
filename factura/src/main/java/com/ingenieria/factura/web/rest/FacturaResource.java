@@ -240,7 +240,7 @@ public class FacturaResource {
      * cliente has already an ID.
      */
     @PostMapping("/facturas/facturar")
-    public Mono<ResponseEntity<Factura>> facturarCompra(@RequestParam Long idCliente, @RequestBody OrdenCompraDTO ordenCompraDTO)
+    public Mono<ResponseEntity<Factura>> facturarCompra(@RequestParam String idCliente, @RequestBody OrdenCompraDTO ordenCompraDTO)
         throws BadRequestAlertException {
         log.info("REST client request to facturar productos : {}", idCliente);
 

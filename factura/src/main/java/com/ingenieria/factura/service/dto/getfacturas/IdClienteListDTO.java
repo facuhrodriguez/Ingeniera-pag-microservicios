@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.List;
 
 public class IdClienteListDTO implements Serializable {
-    private List<Long> idCliente;
+    private List<String> idCliente;
 
-    public List<Long> getIdCliente() {
+    public List<String> getIdCliente() {
         return idCliente;
     }
 
-    public void setIdCliente(List<Long> idCliente) {
+    public void setIdCliente(List<String> idCliente) {
         this.idCliente = idCliente;
     }
 }

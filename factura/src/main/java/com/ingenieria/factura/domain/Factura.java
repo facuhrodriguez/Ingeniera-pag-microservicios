@@ -36,7 +36,7 @@ public class Factura implements Serializable {
     private Double totalConIva;
 
     @Column("id_cliente")
-    private Long idCliente;
+    private String idCliente;
 
     @Transient
     @JsonIgnoreProperties(value = { "factura" }, allowSetters = true)
@@ -109,16 +109,16 @@ public class Factura implements Serializable {
         this.totalConIva = totalConIva;
     }
 
-    public Long getIdCliente() {
+    public String getIdCliente() {
         return this.idCliente;
     }
 
-    public Factura idCliente(Long idCliente) {
+    public Factura idCliente(String idCliente) {
         this.setIdCliente(idCliente);
         return this;
     }
 
-    public void setIdCliente(Long idCliente) {
+    public void setIdCliente(String idCliente) {
         this.idCliente = idCliente;
     }
 

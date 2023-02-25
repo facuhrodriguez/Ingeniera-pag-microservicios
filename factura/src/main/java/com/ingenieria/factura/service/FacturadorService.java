@@ -40,7 +40,7 @@ public class FacturadorService {
         this.facturadorHttpClient = facturadorHttpClient;
     }
 
-    public Mono<Factura> run(Long idCliente, OrdenCompraDTO ordenCompraDTO) throws BadRequestAlertException {
+    public Mono<Factura> run(String idCliente, OrdenCompraDTO ordenCompraDTO) throws BadRequestAlertException {
         log.info("Facturador service: el cliente {} desea generar una orden de compra, con lo siguiente. {}", idCliente, ordenCompraDTO);
 
         // almacenar una factura incompleta

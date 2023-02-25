@@ -90,7 +90,7 @@ entity Factura {
   totalSinIva Double
   iva Double
   totalConIva Double
-  idCliente Long
+  idCliente String
 }
 entity DetalleFactura {
   cantidad Float

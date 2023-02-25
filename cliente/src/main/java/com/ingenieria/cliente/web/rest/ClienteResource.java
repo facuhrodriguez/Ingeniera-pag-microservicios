@@ -193,7 +193,7 @@ public class ClienteResource {
         if (nombre == null || apellido == null) {
             log.debug("REST request to get all Clientes");
             return clienteRepository.findAll()
-                .doOnNext(cliente -> idList.getIdCliente().add(Long.valueOf(cliente.getId())))
+                .doOnNext(cliente -> idList.getIdCliente().add(cliente.getId()))
                 .then(Mono.just(idList));
         }
         log.debug("REST request to get a client like {}, {}", nombre, apellido);
