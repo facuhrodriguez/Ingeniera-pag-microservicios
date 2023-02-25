@@ -1,7 +1,6 @@
 package com.ingenieria.cliente.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.web.reactive.ResourceHandlerRegistrationCustomizer;
@@ -16,6 +15,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 import org.springframework.web.server.WebExceptionHandler;
 import org.zalando.problem.spring.webflux.advice.ProblemExceptionHandler;
@@ -23,6 +23,8 @@ import org.zalando.problem.spring.webflux.advice.ProblemHandling;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.web.filter.reactive.CachingHttpHeadersFilter;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
@@ -81,5 +83,10 @@ public class WebConfigurer implements WebFluxConfigurer {
     public CachingHttpHeadersFilter cachingHttpHeadersFilter() {
         // Use a cache filter that only match selected paths
         return new CachingHttpHeadersFilter(TimeUnit.DAYS.toMillis(jHipsterProperties.getHttp().getCache().getTimeToLiveInDays()));
+    }
+
+    @Bean
+    public WebClient webClient() {
+        return WebClient.create();
     }
 }

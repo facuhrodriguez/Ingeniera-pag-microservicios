@@ -2,6 +2,8 @@ package com.ingenieria.cliente.web.rest;
 
 import com.ingenieria.cliente.domain.Cliente;
 import com.ingenieria.cliente.repository.ClienteRepository;
+import com.ingenieria.cliente.service.ClienteService;
+import com.ingenieria.cliente.service.dto.getgastototalconiva.ClientesGastoTotalConIvaDTO;
 import com.ingenieria.cliente.service.dto.getclientes.IdClienteListDTO;
 import com.ingenieria.cliente.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -34,9 +36,11 @@ public class ClienteResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final ClienteService clienteService;
     private final ClienteRepository clienteRepository;
 
-    public ClienteResource(ClienteRepository clienteRepository) {
+    public ClienteResource(ClienteService clienteService, ClienteRepository clienteRepository) {
+        this.clienteService = clienteService;
         this.clienteRepository = clienteRepository;
     }
 
@@ -233,5 +237,17 @@ public class ClienteResource {
                     ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id)).build()
                 )
             );
+    }
+
+    /**
+     * {@code GET  /clientes/con-gasto-total-iva} : obtain the total expense with VAT of all the invoices for each client.
+     *
+     * @return the {@link List} with status {@code 200 (OK)} and with body
+     * the cliente, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/clientes/con-gasto-total-iva")
+    public Mono<ClientesGastoTotalConIvaDTO> getClientesAndGastoTotalConIva() {
+        log.debug("REST request to get Cliente with Gasto Total with IVA");
+        return clienteService.GetClientesGastoTotalConIvaService();
     }
 }
