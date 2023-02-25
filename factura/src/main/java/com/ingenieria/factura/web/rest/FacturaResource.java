@@ -4,6 +4,7 @@ import com.ingenieria.factura.domain.Factura;
 import com.ingenieria.factura.repository.FacturaRepository;
 import com.ingenieria.factura.service.FacturaService;
 import com.ingenieria.factura.service.FacturadorService;
+import com.ingenieria.factura.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
 import com.ingenieria.factura.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.factura.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -194,7 +195,7 @@ public class FacturaResource {
             return facturaRepository.findAll();
         }
         log.debug("REST request to get all Facturas with client owner like {}, {}", nombre, apellido);
-        return facturaService.run(nombre, apellido);
+        return facturaService.findAllFacturas(nombre, apellido);
     }
 
     /**
@@ -258,5 +259,18 @@ public class FacturaResource {
                     throw new RuntimeException(e);
                 }
             });
+    }
+
+    /**
+     * {@code GET  /facturas/con-gasto-total-iva/:id} : get the "id" client total expenses with VAI.
+     *
+     * @param id the id of the factura to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the factura, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/facturas/con-gasto-total-iva/{id}")
+    public Mono<GastoTotalConIvaDTO> getFactura(@PathVariable String id) {
+        log.info("REST request to get the id client total expenses with VAI: {}", id);
+        return this.facturaRepository.getGastoTotalConIva(id)
+            .map(GastoTotalConIvaDTO::new);
     }
 }

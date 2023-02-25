@@ -32,7 +32,7 @@ public class FacturaService {
         this.webClient = webClient;
     }
 
-    public Flux<Factura> run(String nombre, String apellido) {
+    public Flux<Factura> findAllFacturas(String nombre, String apellido) {
         log.info("Factura service: finding all using strings {}, {}", nombre, apellido);
 
         var msClienteInstance = discoveryClient.getInstances("cliente").get(0);

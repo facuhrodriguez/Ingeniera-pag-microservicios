@@ -2,8 +2,11 @@ package com.ingenieria.factura.repository;
 
 import com.ingenieria.factura.domain.Factura;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -26,6 +29,14 @@ public interface FacturaRepository extends ReactiveCrudRepository<Factura, Long>
     Mono<Void> deleteById(Long id);
 
     Flux<Factura> findAllByIdCliente(String idCliente);
+
+    @Transactional(readOnly = true)
+    @Query(
+        "SELECT COALESCE(SUM(f.total_con_iva), 0) as gastoTotal " +
+            "FROM factura f " +
+            "WHERE f.id_cliente = :idCliente"
+    )
+    Mono<Double> getGastoTotalConIva(@Param("idCliente") String idCliente);
 }
 
 interface FacturaRepositoryInternal {
