@@ -37,6 +37,14 @@ public interface FacturaRepository extends ReactiveCrudRepository<Factura, Long>
             "WHERE f.id_cliente = :idCliente"
     )
     Mono<Double> getGastoTotalConIva(@Param("idCliente") String idCliente);
+
+    @Transactional(readOnly = true)
+    @Query(
+        "SELECT DISTINCT f.* " +
+            "FROM detalle_factura df " +
+            "JOIN factura f ON (df.factura_id = f.id AND df.id_producto = :idProducto)"
+    )
+    Flux<Factura> getAllFacturas(@Param("idProducto") Long idProducto);
 }
 
 interface FacturaRepositoryInternal {

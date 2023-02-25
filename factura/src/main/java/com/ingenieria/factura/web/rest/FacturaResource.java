@@ -189,10 +189,16 @@ public class FacturaResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of facturas in body.
      */
     @GetMapping("/facturas")
-    public Flux<Factura> getAllFacturas(@RequestParam(required = false) String nombre, @RequestParam(required = false) String apellido) {
-        if (nombre == null || apellido == null) {
+    public Flux<Factura> getAllFacturas(@RequestParam(required = false) String nombre,
+                                        @RequestParam(required = false) String apellido,
+                                        @RequestParam(required = false) String marca) {
+        if ((nombre == null || apellido == null) && marca == null) {
             log.debug("REST request to get all Facturas");
             return facturaRepository.findAll();
+        }
+        if (marca != null) {
+            log.debug("REST request to get all Facturas with marca like {}", marca);
+            return facturaService.findAllFacturas(marca);
         }
         log.debug("REST request to get all Facturas with client owner like {}, {}", nombre, apellido);
         return facturaService.findAllFacturas(nombre, apellido);
@@ -273,4 +279,5 @@ public class FacturaResource {
         return this.facturaRepository.getGastoTotalConIva(id)
             .map(GastoTotalConIvaDTO::new);
     }
+
 }

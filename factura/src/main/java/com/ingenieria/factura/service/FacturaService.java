@@ -3,6 +3,7 @@ package com.ingenieria.factura.service;
 import com.ingenieria.factura.domain.Factura;
 import com.ingenieria.factura.repository.FacturaRepository;
 import com.ingenieria.factura.service.dto.getfacturas.IdClienteListDTO;
+import com.ingenieria.factura.service.dto.getprecio.ProductoListDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,6 +55,31 @@ public class FacturaService {
                 Flux.fromStream(ids.stream())
                     .concatMap(facturaRepository::findAllByIdCliente))
             .flatMapMany(facturaFlux -> facturaFlux);
+
+    }
+
+    public Flux<Factura> findAllFacturas(String marca) {
+        log.info("Factura service: finding all using string {}", marca);
+
+        var msProductoInstance = discoveryClient.getInstances("producto").get(0);
+
+        var uri = URI.create(String.format("%s/api/productos/ids?marca=%s", msProductoInstance.getUri(), marca));
+
+        return webClient.get()
+            .uri(uri)
+            .header("Content-Type", "application/json")
+            .header("Authorization", String.format("Bearer %s", jwtBase64))
+            .retrieve()
+            .bodyToMono(ProductoListDTO.class)
+            .map(productoListDTO ->
+            {
+                log.debug("All products obtained: {}", productoListDTO.getProductoList());
+                return Flux.fromStream(productoListDTO.getProductoList().stream())
+                    .concatMap(facturaRepository::getAllFacturas);
+            })
+            .flatMapMany(facturaFlux -> facturaFlux)
+            .distinct()
+            .doOnComplete(() -> log.debug("All Facturas were obtained"));
 
     }
 

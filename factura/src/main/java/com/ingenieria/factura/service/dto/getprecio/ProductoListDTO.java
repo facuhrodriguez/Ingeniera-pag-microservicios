@@ -7,6 +7,9 @@ public class ProductoListDTO implements Serializable {
 
     private List<Long> productoList;
 
+    public ProductoListDTO() {
+    }
+
     public ProductoListDTO(List<Long> productoList) {
         this.productoList = productoList;
     }
