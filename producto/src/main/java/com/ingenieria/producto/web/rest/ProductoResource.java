@@ -259,12 +259,12 @@ public class ProductoResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the id request.
      */
-    @GetMapping("/productos/decrementar-stock?idSolicitud")
-    public Mono<ResponseEntity<Void>> decrementarStock(@RequestParam long idSolicitud) {
+    @GetMapping("/productos/decrementar-stock")
+    public Mono<ResponseEntity<Void>> decrementarStock(@RequestParam Long idSolicitud) {
         log.debug("REST request to decrementar stock with id: {}", idSolicitud);
         return productoService
-                .decrementarStock(idSolicitud)
-                .then(Mono.just(ResponseEntity.ok().build()));
+            .decrementarStock(idSolicitud)
+            .then(Mono.just(ResponseEntity.ok().build()));
     }
 
     /**
