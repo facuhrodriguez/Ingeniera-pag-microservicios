@@ -1,6 +1,7 @@
 package com.ingenieria.factura.service;
 
 import com.ingenieria.factura.domain.Factura;
+import com.ingenieria.factura.repository.DetalleFacturaRepository;
 import com.ingenieria.factura.repository.FacturaRepository;
 import com.ingenieria.factura.service.dto.getfacturas.IdClienteListDTO;
 import com.ingenieria.factura.service.dto.getprecio.ProductoListDTO;
@@ -11,15 +12,19 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
 
+import static java.util.stream.Collectors.toSet;
+
 @Service
 @Transactional
 public class FacturaService {
     private final FacturaRepository facturaRepository;
+    private final DetalleFacturaRepository detalleFacturaRepository;
     private final DiscoveryClient discoveryClient;
     private final WebClient webClient;
     private final Logger log = LoggerFactory.getLogger(FacturaService.class);
@@ -27,8 +32,9 @@ public class FacturaService {
     @Value("${jhipster.security.authentication.jwt.base64-secret}")
     private String jwtBase64;
 
-    public FacturaService(FacturaRepository facturaRepository, DiscoveryClient discoveryClient, WebClient webClient) {
+    public FacturaService(FacturaRepository facturaRepository, DetalleFacturaRepository detalleFacturaRepository, DiscoveryClient discoveryClient, WebClient webClient) {
         this.facturaRepository = facturaRepository;
+        this.detalleFacturaRepository = detalleFacturaRepository;
         this.discoveryClient = discoveryClient;
         this.webClient = webClient;
     }
@@ -81,6 +87,16 @@ public class FacturaService {
             .distinct()
             .doOnComplete(() -> log.debug("All Facturas were obtained"));
 
+    }
+
+    public Mono<Factura> findFacturaWithDetalles(Long id) {
+        return facturaRepository.findById(id)
+            .flatMap(factura -> detalleFacturaRepository.findByFactura(factura.getId())
+                .collect(toSet())
+                .map(detalles -> {
+                    factura.setDetalleFacturas(detalles);
+                    return factura;
+                }));
     }
 
 }

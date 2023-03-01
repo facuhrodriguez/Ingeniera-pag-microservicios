@@ -176,7 +176,7 @@ public class ClienteResource {
     }
 
     /**
-     * {@code GET  /clientes} : get all the clientes.
+     * {@code GET  /clientes} : get all the clientes with their telefono.
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of clientes in body.
      */
@@ -217,7 +217,7 @@ public class ClienteResource {
     @GetMapping("/clientes/{id}")
     public Mono<ResponseEntity<Cliente>> getCliente(@PathVariable String id) {
         log.debug("REST request to get Cliente : {}", id);
-        Mono<Cliente> cliente = clienteRepository.findById(id);
+        Mono<Cliente> cliente = clienteRepository.findClienteByIdWithTelefono(id);
         return ResponseUtil.wrapOrNotFound(cliente);
     }
 

@@ -213,7 +213,7 @@ public class FacturaResource {
     @GetMapping("/facturas/{id}")
     public Mono<ResponseEntity<Factura>> getFactura(@PathVariable Long id) {
         log.debug("REST request to get Factura : {}", id);
-        Mono<Factura> factura = facturaRepository.findById(id);
+        Mono<Factura> factura = facturaService.findFacturaWithDetalles(id);
         return ResponseUtil.wrapOrNotFound(factura);
     }
 

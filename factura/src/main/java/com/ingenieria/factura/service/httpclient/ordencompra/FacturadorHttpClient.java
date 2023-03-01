@@ -27,9 +27,9 @@ public class FacturadorHttpClient {
     @Value("${jhipster.security.authentication.jwt.base64-secret}")
     private String jwtBase64;
 
-    public FacturadorHttpClient(DiscoveryClient discoveryClient, WebClient.Builder webClientBuilder) {
+    public FacturadorHttpClient(DiscoveryClient discoveryClient, WebClient webClient) {
         this.discoveryClient = discoveryClient;
-        this.webClient = webClientBuilder.build();
+        this.webClient = webClient;
     }
 
     public Mono<Long> checkAllStock(OrdenCompraDTO ordenCompraDTO) throws WebClientException {
@@ -55,22 +55,23 @@ public class FacturadorHttpClient {
 
     }
 
-    public Mono<Void> decrementarStock(long idSolicitud) throws WebClientException {
+    public Mono<Void> decrementarStock(Long idSolicitud) throws WebClientException {
         log.debug("FacturadorHttpClient: enviando solicitud para decrementar el stock...");
 
         var msProductoInstance = discoveryClient.getInstances("producto").get(0);
 
-        var uri = URI.create(msProductoInstance.getUri() + "/api/productos/decrementar-stock?idSolicitud=" + idSolicitud);
+        var uri = URI.create(String.format("%s/api/productos/decrementar-stock?idSolicitud=%d", msProductoInstance.getUri(), idSolicitud));
 
         return webClient.get()
-                .uri(uri)
-                .header("Authorization", String.format("Bearer %s", jwtBase64))
-                .retrieve()
-                .bodyToMono(Void.class)
-                .doOnSuccess((mono) -> log.debug("Facturador service: stock decrementado! id={}", idSolicitud));
+            .uri(uri)
+            .header("Authorization", String.format("Bearer %s", jwtBase64))
+            .retrieve()
+            .bodyToMono(Void.class)
+            .doOnSuccess((mono) -> log.debug("Facturador service: stock decrementado! id={}", idSolicitud))
+            .doOnError(e -> log.debug("ERROR GET: ", e));
     }
 
-    public Mono<ResponsePrecioListDTO> getPrices(ProductoListDTO productos) {
+    public Mono<ResponsePrecioListDTO> getPrices(ProductoListDTO productos) throws WebClientException {
         log.debug("FacturadorHttpClient: enviando solicitud para obtener listado de precios...");
 
         var msProductoInstance = discoveryClient.getInstances("producto").get(0);
