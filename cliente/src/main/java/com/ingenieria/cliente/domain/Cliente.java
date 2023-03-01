@@ -30,6 +30,7 @@ public class Cliente implements Serializable {
     @Field("activo")
     private Integer activo;
 
+    @JsonIgnoreProperties(value = {"cliente"}, allowSetters = true)
     private Telefono telefono;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

@@ -3,12 +3,8 @@ package com.ingenieria.cliente.web.rest;
 import com.ingenieria.cliente.domain.Telefono;
 import com.ingenieria.cliente.repository.ClienteRepository;
 import com.ingenieria.cliente.repository.TelefonoRepository;
+import com.ingenieria.cliente.service.TelefonoService;
 import com.ingenieria.cliente.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +17,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * REST controller for managing {@link com.ingenieria.cliente.domain.Telefono}.
@@ -38,10 +39,12 @@ public class TelefonoResource {
 
     private final TelefonoRepository telefonoRepository;
     private final ClienteRepository clienteRepository;
+    private final TelefonoService telefonoService;
 
-    public TelefonoResource(TelefonoRepository telefonoRepository, ClienteRepository clienteRepository) {
+    public TelefonoResource(TelefonoRepository telefonoRepository, ClienteRepository clienteRepository, TelefonoService telefonoService) {
         this.telefonoRepository = telefonoRepository;
         this.clienteRepository = clienteRepository;
+        this.telefonoService = telefonoService;
     }
 
     /**
@@ -184,14 +187,21 @@ public class TelefonoResource {
     }
 
     /**
-     * {@code GET  /telefonos} : get all the telefonos.
+     * {@code GET  /telefonos} : get all the telefonos filtering by nombre and apellido.
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of telefonos in body.
      */
     @GetMapping("/telefonos")
-    public Mono<List<Telefono>> getAllTelefonos() {
-        log.debug("REST request to get all Telefonos");
-        return telefonoRepository.findAll().collectList();
+    public Mono<List<Telefono>> getAllTelefonos(@RequestParam(required = false) String nombre, @RequestParam(required = false) String apellido) {
+        log.debug("REST request to get all Telefonos filtering by {}, {}", nombre, apellido);
+        if (nombre == null || apellido == null) {
+            log.debug("REST request to get all Telefonos");
+            return telefonoService.getTelefonos().collectList();
+        }
+        log.debug("REST request to get a telefono from {}, {}", nombre, apellido);
+        String nombreRegex = ".*" + nombre + ".*";
+        String apellidoRegex = ".*" + apellido + ".*";
+        return telefonoService.getTelefonos(nombreRegex, apellidoRegex).collectList();
     }
 
     /**

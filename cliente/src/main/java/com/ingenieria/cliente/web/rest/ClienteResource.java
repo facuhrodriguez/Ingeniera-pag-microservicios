@@ -183,7 +183,7 @@ public class ClienteResource {
     @GetMapping("/clientes")
     public Mono<List<Cliente>> getAllClientes() {
         log.debug("REST request to get all Clientes");
-        return clienteRepository.findAll().collectList();
+        return clienteService.getAll().collectList();
     }
 
     /**
@@ -209,7 +209,7 @@ public class ClienteResource {
     }
 
     /**
-     * {@code GET  /clientes/:id} : get the "id" cliente.
+     * {@code GET  /clientes/:id} : get the "id" Cliente with their Telefono.
      *
      * @param id the id of the cliente to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the cliente, or with status {@code 404 (Not Found)}.
@@ -217,7 +217,7 @@ public class ClienteResource {
     @GetMapping("/clientes/{id}")
     public Mono<ResponseEntity<Cliente>> getCliente(@PathVariable String id) {
         log.debug("REST request to get Cliente : {}", id);
-        Mono<Cliente> cliente = clienteRepository.findClienteByIdWithTelefono(id);
+        Mono<Cliente> cliente = clienteService.getClientWithTelefono(id);
         return ResponseUtil.wrapOrNotFound(cliente);
     }
 
