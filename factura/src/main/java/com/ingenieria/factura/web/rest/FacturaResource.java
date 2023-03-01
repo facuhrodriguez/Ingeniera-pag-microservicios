@@ -195,8 +195,8 @@ public class FacturaResource {
                                         @RequestParam(required = false) String apellido,
                                         @RequestParam(required = false) String marca) {
         if ((nombre == null || apellido == null) && marca == null) {
-            log.debug("REST request to get all Facturas");
-            return facturaRepository.findAll();
+            log.debug("REST request to get all Facturas with Detalle Facturas");
+            return facturaService.findAll();
         }
         if (marca != null) {
             log.debug("REST request to get all Facturas with marca like {}", marca);

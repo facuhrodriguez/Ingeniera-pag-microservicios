@@ -89,6 +89,13 @@ public class FacturaService {
 
     }
 
+    public Flux<Factura> findAll() {
+        return facturaRepository.findAll()
+            .flatMap(factura -> findFacturaWithDetalles(factura.getId()))
+            .collectList()
+            .flatMapMany(Flux::fromIterable);
+    }
+
     public Mono<Factura> findFacturaWithDetalles(Long id) {
         return facturaRepository.findById(id)
             .flatMap(factura -> detalleFacturaRepository.findByFactura(factura.getId())
