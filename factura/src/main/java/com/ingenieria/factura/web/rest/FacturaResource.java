@@ -6,6 +6,7 @@ import com.ingenieria.factura.service.FacturaService;
 import com.ingenieria.factura.service.FacturadorService;
 import com.ingenieria.factura.service.dto.getfacturas.IdClienteListDTO;
 import com.ingenieria.factura.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
+import com.ingenieria.factura.service.dto.getprecio.ProductoListDTO;
 import com.ingenieria.factura.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.factura.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
@@ -293,6 +294,21 @@ public class FacturaResource {
         return facturaRepository.getAllIdClients()
             .collectList()
             .doOnNext(r::setIdCliente)
+            .then(Mono.just(r));
+    }
+
+    /**
+     * {@code GET  /facturas/products} : get all the purchased products "id".
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     * of products in body.
+     */
+    @GetMapping("/facturas/products")
+    public Mono<ProductoListDTO> getPurchasedProductos() {
+        ProductoListDTO r = new ProductoListDTO();
+        return facturaRepository.getAllIdProducts()
+            .collectList()
+            .doOnNext(r::setProductoList)
             .then(Mono.just(r));
     }
 
