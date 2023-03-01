@@ -4,6 +4,7 @@ import com.ingenieria.factura.domain.Factura;
 import com.ingenieria.factura.repository.FacturaRepository;
 import com.ingenieria.factura.service.FacturaService;
 import com.ingenieria.factura.service.FacturadorService;
+import com.ingenieria.factura.service.dto.getfacturas.IdClienteListDTO;
 import com.ingenieria.factura.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
 import com.ingenieria.factura.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.factura.web.rest.errors.BadRequestAlertException;
@@ -278,6 +279,21 @@ public class FacturaResource {
         log.info("REST request to get the id client total expenses with VAI: {}", id);
         return this.facturaRepository.getGastoTotalConIva(id)
             .map(GastoTotalConIvaDTO::new);
+    }
+
+    /**
+     * {@code GET  /facturas/clients} : get all the clientes "id" with at least one factura.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     * of clientes in body.
+     */
+    @GetMapping("/facturas/clients")
+    public Mono<IdClienteListDTO> getClientesWithFacturas() {
+        IdClienteListDTO r = new IdClienteListDTO();
+        return facturaRepository.getAllIdClients()
+            .collectList()
+            .doOnNext(r::setIdCliente)
+            .then(Mono.just(r));
     }
 
 }
