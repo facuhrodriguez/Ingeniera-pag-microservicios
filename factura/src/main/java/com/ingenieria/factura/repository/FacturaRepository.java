@@ -45,6 +45,10 @@ public interface FacturaRepository extends ReactiveCrudRepository<Factura, Long>
             "JOIN factura f ON (df.factura_id = f.id AND df.id_producto = :idProducto)"
     )
     Flux<Factura> getAllFacturas(@Param("idProducto") Long idProducto);
+
+    @Transactional(readOnly = true)
+    @Query("SELECT DISTINCT f.id_cliente " + "FROM Factura f")
+    Flux<String> getAllIdClients();
 }
 
 interface FacturaRepositoryInternal {
