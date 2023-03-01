@@ -43,8 +43,8 @@ class FacturaResourceIT {
     private static final Double DEFAULT_TOTAL_CON_IVA = 1D;
     private static final Double UPDATED_TOTAL_CON_IVA = 2D;
 
-    private static final Long DEFAULT_ID_CLIENTE = 1L;
-    private static final Long UPDATED_ID_CLIENTE = 2L;
+    private static final String DEFAULT_ID_CLIENTE = "1";
+    private static final String UPDATED_ID_CLIENTE = "2";
 
     private static final String ENTITY_API_URL = "/api/facturas";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -217,7 +217,7 @@ class FacturaResourceIT {
             .jsonPath("$.[*].totalConIva")
             .value(hasItem(DEFAULT_TOTAL_CON_IVA.doubleValue()))
             .jsonPath("$.[*].idCliente")
-            .value(hasItem(DEFAULT_ID_CLIENTE.intValue()));
+            .value(hasItem(Integer.valueOf(DEFAULT_ID_CLIENTE)));
     }
 
     @Test
@@ -247,7 +247,7 @@ class FacturaResourceIT {
             .jsonPath("$.totalConIva")
             .value(is(DEFAULT_TOTAL_CON_IVA.doubleValue()))
             .jsonPath("$.idCliente")
-            .value(is(DEFAULT_ID_CLIENTE.intValue()));
+            .value(is(Integer.valueOf(DEFAULT_ID_CLIENTE)));
     }
 
     @Test

@@ -1,13 +1,14 @@
 package com.ingenieria.cliente.web.rest;
 
 import com.ingenieria.cliente.domain.Telefono;
+import com.ingenieria.cliente.repository.ClienteRepository;
 import com.ingenieria.cliente.repository.TelefonoRepository;
 import com.ingenieria.cliente.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,9 +37,11 @@ public class TelefonoResource {
     private String applicationName;
 
     private final TelefonoRepository telefonoRepository;
+    private final ClienteRepository clienteRepository;
 
-    public TelefonoResource(TelefonoRepository telefonoRepository) {
+    public TelefonoResource(TelefonoRepository telefonoRepository, ClienteRepository clienteRepository) {
         this.telefonoRepository = telefonoRepository;
+        this.clienteRepository = clienteRepository;
     }
 
     /**
@@ -49,23 +52,34 @@ public class TelefonoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/telefonos")
-    public Mono<ResponseEntity<Telefono>> createTelefono(@RequestBody Telefono telefono) throws URISyntaxException {
+    public Mono<ResponseEntity<Telefono>> createTelefono(@RequestBody Telefono telefono, @RequestParam String client_id) throws URISyntaxException {
         log.debug("REST request to save Telefono : {}", telefono);
         if (telefono.getId() != null) {
             throw new BadRequestAlertException("A new telefono cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        return telefonoRepository
-            .save(telefono)
-            .map(result -> {
-                try {
-                    return ResponseEntity
-                        .created(new URI("/api/telefonos/" + result.getId()))
-                        .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
-                        .body(result);
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+
+        return telefonoRepository.existsByClienteId(client_id)
+            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST)))
+            .flatMap((b) ->
+                clienteRepository.findById(client_id)
+                    .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
+                    .flatMap(cliente -> {
+                        telefono.setCliente(cliente);
+
+                        return telefonoRepository
+                            .save(telefono)
+                            .map(result -> {
+                                try {
+                                    return ResponseEntity
+                                        .created(new URI("/api/telefonos/" + result.getId()))
+                                        .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId()))
+                                        .body(result);
+                                } catch (URISyntaxException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                    })
+            );
     }
 
     /**

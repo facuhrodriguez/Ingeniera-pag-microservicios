@@ -12,12 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -52,7 +52,7 @@ public class FacturadorService {
         // enviar al ms producto que chequee el stock completo
         return facturadorHttpClient.checkAllStock(ordenCompraDTO)
             // retorna un id de solicitud para decrementar ESE stock
-            .doOnSuccess(facturadorHttpClient::decrementarStock)
+            .flatMap(facturadorHttpClient::decrementarStock)
             // obtener precios de todos los productos
             .then(facturadorHttpClient.getPrices(new ProductoListDTO(ordenCompraDTO.getListProductsOnly())))
             .flatMap((response) -> {
@@ -70,7 +70,6 @@ public class FacturadorService {
                         DetalleFactura detalleFactura = new DetalleFactura();
                         detalleFactura.setCantidad(cantidad);
                         detalleFactura.setIdProducto(codigoProducto);
-                        detalleFactura.setFactura(factura);
                         dfs.add(detalleFactura);
                     })
                     .map((productoCantidadDTO) -> {
@@ -89,14 +88,21 @@ public class FacturadorService {
                 factura.setTotalConIva(this.calcularPrecioConIVA(precioFinal));
 
                 return facturaRepository.save(factura)
-                    .flatMap(factura1 ->
-                        Flux.fromIterable(dfs)
-                            .flatMap(detalleFacRepository::save)
-                            .doOnNext(factura::addDetalleFactura)
-                            .doOnComplete(() -> log.debug("Facturador service: detalle facturas creadas"))
-                            .then(Mono.just(factura1))
-                            .doOnSuccess((factura2) -> log.debug("Facturador service: factura creada {}", factura2))
-                    );
+                    .doOnSuccess(facturaGuardada -> log.debug("Facturador service: factura creada {}", facturaGuardada))
+                    .flatMap(facturaGuardada -> {
+                        dfs.forEach(df -> df.setFactura(facturaGuardada));
+                        return detalleFacRepository.saveAll(dfs)
+                            .collect(Collectors.toSet())
+                            .flatMap(detalleFacturasGuardados -> {
+                                facturaGuardada.setDetalleFacturas(detalleFacturasGuardados);
+                                log.debug("Facturador service: detalle facturas creadas");
+                                return facturaRepository.save(facturaGuardada);
+                            })
+                            .doOnSuccess(facturaActualizada -> log.debug("Facturador service: factura actualizada {}", facturaActualizada));
+                    })
+                    .single();
+
+
             });
     }
 

@@ -182,6 +182,7 @@ public class Factura implements Serializable {
             ", iva=" + getIva() +
             ", totalConIva=" + getTotalConIva() +
             ", idCliente=" + getIdCliente() +
+            ", detallesFactura=" + getDetalleFacturas() +
             "}";
     }
 }
