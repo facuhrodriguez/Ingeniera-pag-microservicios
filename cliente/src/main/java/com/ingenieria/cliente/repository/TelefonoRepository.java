@@ -3,6 +3,7 @@ package com.ingenieria.cliente.repository;
 import com.ingenieria.cliente.domain.Telefono;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -13,4 +14,6 @@ import reactor.core.publisher.Mono;
 public interface TelefonoRepository extends ReactiveMongoRepository<Telefono, String> {
 
     Mono<Boolean> existsByClienteId(String clienteId);
+
+    Flux<Telefono> findByCliente_Id(String clienteId);
 }

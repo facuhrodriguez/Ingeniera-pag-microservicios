@@ -1,6 +1,9 @@
 package com.ingenieria.cliente.service;
 
+import com.ingenieria.cliente.domain.Cliente;
+import com.ingenieria.cliente.domain.Telefono;
 import com.ingenieria.cliente.repository.ClienteRepository;
+import com.ingenieria.cliente.repository.TelefonoRepository;
 import com.ingenieria.cliente.service.dto.getgastototalconiva.ClienteGastoTotalConIvaDTO;
 import com.ingenieria.cliente.service.dto.getgastototalconiva.ClientesGastoTotalConIvaDTO;
 import com.ingenieria.cliente.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
@@ -11,6 +14,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -20,6 +24,7 @@ import java.net.URI;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
+    private final TelefonoRepository telefonoRepository;
     private final DiscoveryClient discoveryClient;
     private final WebClient webClient;
     private final Logger log = LoggerFactory.getLogger(ClienteService.class);
@@ -27,8 +32,9 @@ public class ClienteService {
     @Value("${jhipster.security.authentication.jwt.base64-secret}")
     private String jwtBase64;
 
-    public ClienteService(ClienteRepository clienteRepository, DiscoveryClient discoveryClient, WebClient webClient) {
+    public ClienteService(ClienteRepository clienteRepository, TelefonoRepository telefonoRepository, DiscoveryClient discoveryClient, WebClient webClient) {
         this.clienteRepository = clienteRepository;
+        this.telefonoRepository = telefonoRepository;
         this.discoveryClient = discoveryClient;
         this.webClient = webClient;
     }
@@ -58,4 +64,22 @@ public class ClienteService {
             .then(Mono.just(r));
 
     }
+
+    public Flux<Cliente> getAll() {
+        return clienteRepository.findAll()
+            .flatMap(cliente -> getClientWithTelefono(cliente.getId()))
+            .collectList()
+            .flatMapMany(Flux::fromIterable);
+    }
+
+    public Mono<Cliente> getClientWithTelefono(String id) {
+        return clienteRepository.findById(id)
+            .flatMap(cliente -> {
+                Mono<Telefono> telefonoMono = telefonoRepository.findByCliente_Id(cliente.getId())
+                    .singleOrEmpty();
+                return telefonoMono.map(cliente::telefono)
+                    .defaultIfEmpty(cliente);
+            });
+    }
+
 }
