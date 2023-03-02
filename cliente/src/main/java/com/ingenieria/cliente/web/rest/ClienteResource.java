@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.reactive.ResponseUtil;
@@ -250,4 +251,17 @@ public class ClienteResource {
         log.debug("REST request to get Cliente with Gasto Total with IVA");
         return clienteService.GetClientesGastoTotalConIvaService();
     }
+
+    /**
+     * {@code GET  /clientes/clientes-sin-facturas} : get all the clients without facturas.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     * of clients in body.
+     */
+    @GetMapping("/clientes/sin-facturas")
+    public Flux<Cliente> getClientsWithoutFacturas() {
+        log.debug("REST request to get Cliente without Facturas");
+        return clienteService.getClientsWithoutFacturas();
+    }
+
 }

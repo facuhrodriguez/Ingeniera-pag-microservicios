@@ -4,6 +4,7 @@ import com.ingenieria.cliente.domain.Cliente;
 import com.ingenieria.cliente.domain.Telefono;
 import com.ingenieria.cliente.repository.ClienteRepository;
 import com.ingenieria.cliente.repository.TelefonoRepository;
+import com.ingenieria.cliente.service.dto.getclientes.IdClienteListDTO;
 import com.ingenieria.cliente.service.dto.getgastototalconiva.ClienteGastoTotalConIvaDTO;
 import com.ingenieria.cliente.service.dto.getgastototalconiva.ClientesGastoTotalConIvaDTO;
 import com.ingenieria.cliente.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
@@ -80,6 +81,26 @@ public class ClienteService {
                 return telefonoMono.map(cliente::telefono)
                     .defaultIfEmpty(cliente);
             });
+    }
+
+    public Flux<Cliente> getClientsWithoutFacturas() {
+        log.info("Cliente service: searching all clients along without facturas registered");
+
+        var msFacturaInstance = discoveryClient.getInstances("factura").get(0);
+
+        var uri = String.format("%s/api/facturas/clients", msFacturaInstance.getUri());
+
+        return webClient.get()
+            .uri(URI.create(uri))
+            .header("Content-Type", "application/json")
+            .header("Authorization", String.format("Bearer %s", jwtBase64))
+            .retrieve()
+            .bodyToMono(IdClienteListDTO.class)
+            .map(idClienteListDTO -> clienteRepository.findAll()
+                .filter(cliente -> !idClienteListDTO.getIdCliente()
+                    .contains(cliente.getId())
+                )
+            ).flatMapMany(clienteFlux -> clienteFlux);
     }
 
 }
