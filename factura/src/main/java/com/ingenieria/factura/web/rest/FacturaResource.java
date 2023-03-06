@@ -279,7 +279,7 @@ public class FacturaResource {
     public Mono<GastoTotalConIvaDTO> getFactura(@PathVariable String id) {
         log.info("REST request to get the id client total expenses with VAI: {}", id);
         return this.facturaRepository.getGastoTotalConIva(id)
-            .map(GastoTotalConIvaDTO::new);
+            .flatMap(d -> Mono.just(new GastoTotalConIvaDTO(id, d)));
     }
 
     /**

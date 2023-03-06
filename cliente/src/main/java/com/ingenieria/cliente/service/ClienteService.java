@@ -1,17 +1,22 @@
 package com.ingenieria.cliente.service;
 
 import com.ingenieria.cliente.domain.Cliente;
+import com.ingenieria.cliente.domain.GastoTotalIva;
 import com.ingenieria.cliente.domain.Telefono;
 import com.ingenieria.cliente.repository.ClienteRepository;
+import com.ingenieria.cliente.repository.GastoConIvaRepository;
 import com.ingenieria.cliente.repository.TelefonoRepository;
 import com.ingenieria.cliente.service.dto.getclientes.IdClienteListDTO;
-import com.ingenieria.cliente.service.dto.getgastototalconiva.ClienteGastoTotalConIvaDTO;
-import com.ingenieria.cliente.service.dto.getgastototalconiva.ClientesGastoTotalConIvaDTO;
 import com.ingenieria.cliente.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
+import com.ingenieria.cliente.service.dto.getgastototalconiva.NombreApellidoGastoTotalConIvaDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,6 +31,9 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
     private final TelefonoRepository telefonoRepository;
+    private final GastoConIvaRepository gastoConIvaRepository;
+
+    private final ReactiveMongoTemplate mongoTemplate;
     private final DiscoveryClient discoveryClient;
     private final WebClient webClient;
     private final Logger log = LoggerFactory.getLogger(ClienteService.class);
@@ -33,37 +41,30 @@ public class ClienteService {
     @Value("${jhipster.security.authentication.jwt.base64-secret}")
     private String jwtBase64;
 
-    public ClienteService(ClienteRepository clienteRepository, TelefonoRepository telefonoRepository, DiscoveryClient discoveryClient, WebClient webClient) {
+    public ClienteService(ClienteRepository clienteRepository, TelefonoRepository telefonoRepository, GastoConIvaRepository gastoConIvaRepository, ReactiveMongoTemplate mongoTemplate, DiscoveryClient discoveryClient, WebClient webClient) {
         this.clienteRepository = clienteRepository;
         this.telefonoRepository = telefonoRepository;
+        this.gastoConIvaRepository = gastoConIvaRepository;
+        this.mongoTemplate = mongoTemplate;
         this.discoveryClient = discoveryClient;
         this.webClient = webClient;
     }
 
-    public Mono<ClientesGastoTotalConIvaDTO> GetClientesGastoTotalConIvaService() {
+    public Flux<NombreApellidoGastoTotalConIvaDTO> getClientesGastoTotalConIvaService() {
         log.info("Cliente service: searching all customers along with their expenses");
+        return gastoConIvaRepository.findAll()
+            .flatMap((cliente_gastos -> Mono.just(new NombreApellidoGastoTotalConIvaDTO(cliente_gastos.getCliente().getNombre(), cliente_gastos.getCliente().getApellido(), cliente_gastos.getGastoTotalIva()))));
+    }
 
-        var msFacturaInstance = discoveryClient.getInstances("factura").get(0);
-
-        var partialURI = String.format("%s/api/facturas/con-gasto-total-iva", msFacturaInstance.getUri());
-
-        ClientesGastoTotalConIvaDTO r = new ClientesGastoTotalConIvaDTO();
-
-        return clienteRepository.findAll()
-            .flatMap((cliente) -> webClient.get()
-                .uri(URI.create(String.format("%s/%s", partialURI, cliente.getId())))
-                .header("Content-Type", "application/json")
-                .header("Authorization", String.format("Bearer %s", jwtBase64))
-                .retrieve()
-                .bodyToMono(GastoTotalConIvaDTO.class)
-                .map(gastoTotalConIvaDTO ->
-                {
-                    log.debug("Client {} has ${} of expenses", cliente.getId(), gastoTotalConIvaDTO.getGastoTotal());
-                    return r.getClientes().add(new ClienteGastoTotalConIvaDTO(cliente.getNombre(), cliente.getApellido(), gastoTotalConIvaDTO.getGastoTotal()));
-                }))
-            .doOnComplete(() -> log.debug("All Clients were obtained"))
-            .then(Mono.just(r));
-
+    public Mono<GastoTotalConIvaDTO> sumGastoTotalIva(GastoTotalConIvaDTO gastoTotalConIvaDTO) {
+        return gastoConIvaRepository.findGastoTotalIvaByCliente_Id(gastoTotalConIvaDTO.getClienteId())
+            .flatMap(gasto -> {
+                gasto.setGastoTotalIva(gasto.getGastoTotalIva() + gastoTotalConIvaDTO.getGastoTotal());
+                return mongoTemplate.updateFirst(Query.query(Criteria.where("_id").is(gasto.getId())),
+                        Update.update("gasto_total_iva", gasto.getGastoTotalIva()), GastoTotalIva.class)
+                    .thenReturn(gasto);
+            })
+            .flatMap(gastoTotalIva -> Mono.just(new GastoTotalConIvaDTO(gastoTotalIva.getCliente().getId(), gastoTotalIva.getGastoTotalIva())));
     }
 
     public Flux<Cliente> getAll() {

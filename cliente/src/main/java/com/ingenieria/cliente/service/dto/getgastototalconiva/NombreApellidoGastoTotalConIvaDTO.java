@@ -2,13 +2,13 @@ package com.ingenieria.cliente.service.dto.getgastototalconiva;
 
 import java.io.Serializable;
 
-public class ClienteGastoTotalConIvaDTO implements Serializable {
+public class NombreApellidoGastoTotalConIvaDTO implements Serializable {
 
     private String nombre;
     private String apellido;
     private Double gastoTotal;
 
-    public ClienteGastoTotalConIvaDTO(String nombre, String apellido, Double gastoTotal) {
+    public NombreApellidoGastoTotalConIvaDTO(String nombre, String apellido, Double gastoTotal) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.gastoTotal = gastoTotal;

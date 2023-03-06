@@ -4,12 +4,14 @@ import com.ingenieria.factura.domain.DetalleFactura;
 import com.ingenieria.factura.domain.Factura;
 import com.ingenieria.factura.repository.DetalleFacturaRepository;
 import com.ingenieria.factura.repository.FacturaRepository;
+import com.ingenieria.factura.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
 import com.ingenieria.factura.service.dto.getprecio.ProductoListDTO;
 import com.ingenieria.factura.service.dto.ordencompra.OrdenCompraDTO;
 import com.ingenieria.factura.service.httpclient.ordencompra.FacturadorHttpClient;
 import com.ingenieria.factura.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
@@ -26,10 +28,13 @@ public class FacturadorService {
     private final FacturaRepository facturaRepository;
     private final DetalleFacturaRepository detalleFacRepository;
     private final FacturadorHttpClient facturadorHttpClient;
+    @Value("${jhipster.app.IVA:21.0}")
     private final double IVA = 21.0;
     private final Logger log = LoggerFactory.getLogger(FacturadorService.class);
 
+    @Value("${jhipster.app.descuento:20.0}")
     private final double descuento = 20.0;
+    @Value("${jhipster.app.cantidadParaDescuento:15f}")
     private final float cantidadParaDescuento = 15f;
 
     public FacturadorService(
@@ -100,9 +105,10 @@ public class FacturadorService {
                             })
                             .doOnSuccess(facturaActualizada -> log.debug("Facturador service: factura actualizada {}", facturaActualizada));
                     })
-                    .single();
-
-
+                    .single()
+                    .flatMap(facturaFinal -> facturadorHttpClient.sendNewGastoTotal(new GastoTotalConIvaDTO(facturaFinal.getIdCliente(), facturaFinal.getTotalConIva()))
+                        .doOnSuccess((l -> log.debug("Gasto Total con IVA enviado exitosamente a cliente!")))
+                        .then(Mono.just(facturaFinal)));
             });
     }
 
