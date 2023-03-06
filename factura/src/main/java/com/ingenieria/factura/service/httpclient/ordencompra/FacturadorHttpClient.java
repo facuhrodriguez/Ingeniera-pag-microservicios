@@ -1,6 +1,7 @@
 package com.ingenieria.factura.service.httpclient.ordencompra;
 
 import com.ingenieria.factura.service.FacturadorService;
+import com.ingenieria.factura.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
 import com.ingenieria.factura.service.dto.getprecio.ProductoListDTO;
 import com.ingenieria.factura.service.dto.getprecio.ResponsePrecioListDTO;
 import com.ingenieria.factura.service.dto.ordencompra.IdSolicitudDTO;
@@ -83,13 +84,30 @@ public class FacturadorHttpClient {
         //       }
 
         return webClient.post()
-                .uri(uri)
-                .header("Content-Type", "application/json")
-                .header("Authorization", String.format("Bearer %s", jwtBase64))
-                .bodyValue(productos)
-                .retrieve()
-                .bodyToMono(ResponsePrecioListDTO.class)
-                .doOnSuccess((r) -> log.debug("FacturadorHttpClient: listado de precios obtenido!"));
+            .uri(uri)
+            .header("Content-Type", "application/json")
+            .header("Authorization", String.format("Bearer %s", jwtBase64))
+            .bodyValue(productos)
+            .retrieve()
+            .bodyToMono(ResponsePrecioListDTO.class)
+            .doOnSuccess((r) -> log.debug("FacturadorHttpClient: listado de precios obtenido!"));
+    }
+
+    public Mono<GastoTotalConIvaDTO> sendNewGastoTotal(GastoTotalConIvaDTO gastoTotalConIvaDTO) throws WebClientException {
+        log.debug("FacturadorHttpClient: enviando nuevo gasto del cliente {}...", gastoTotalConIvaDTO.getClienteId());
+
+        var msClienteInstance = discoveryClient.getInstances("cliente").get(0);
+
+        var uri = URI.create(msClienteInstance.getUri() + "/api/clientes/con-gasto-total-iva");
+
+        return webClient.put()
+            .uri(uri)
+            .header("Content-Type", "application/json")
+            .header("Authorization", String.format("Bearer %s", jwtBase64))
+            .bodyValue(gastoTotalConIvaDTO)
+            .retrieve()
+            .bodyToMono(GastoTotalConIvaDTO.class);
+
     }
 
 }

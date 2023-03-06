@@ -1,10 +1,13 @@
 package com.ingenieria.cliente.web.rest;
 
 import com.ingenieria.cliente.domain.Cliente;
+import com.ingenieria.cliente.domain.GastoTotalIva;
 import com.ingenieria.cliente.repository.ClienteRepository;
+import com.ingenieria.cliente.repository.GastoConIvaRepository;
 import com.ingenieria.cliente.service.ClienteService;
-import com.ingenieria.cliente.service.dto.getgastototalconiva.ClientesGastoTotalConIvaDTO;
 import com.ingenieria.cliente.service.dto.getclientes.IdClienteListDTO;
+import com.ingenieria.cliente.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
+import com.ingenieria.cliente.service.dto.getgastototalconiva.ListNombreApellidoGastoTotalConIvaDTO;
 import com.ingenieria.cliente.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +42,12 @@ public class ClienteResource {
 
     private final ClienteService clienteService;
     private final ClienteRepository clienteRepository;
+    private final GastoConIvaRepository gastoConIvaRepository;
 
-    public ClienteResource(ClienteService clienteService, ClienteRepository clienteRepository) {
+    public ClienteResource(ClienteService clienteService, ClienteRepository clienteRepository, GastoConIvaRepository gastoConIvaRepository) {
         this.clienteService = clienteService;
         this.clienteRepository = clienteRepository;
+        this.gastoConIvaRepository = gastoConIvaRepository;
     }
 
     /**
@@ -50,16 +55,17 @@ public class ClienteResource {
      *
      * @param cliente the cliente to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new cliente, or with status {@code 400 (Bad Request)} if the cliente has already an ID.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/clientes")
-    public Mono<ResponseEntity<Cliente>> createCliente(@RequestBody Cliente cliente) throws URISyntaxException {
+    public Mono<ResponseEntity<Cliente>> createCliente(@RequestBody Cliente cliente) {
         log.debug("REST request to save Cliente : {}", cliente);
         if (cliente.getId() != null) {
             throw new BadRequestAlertException("A new cliente cannot already have an ID", ENTITY_NAME, "idexists");
         }
         return clienteRepository
             .save(cliente)
+            .flatMap(cliente1 -> gastoConIvaRepository.save(new GastoTotalIva().cliente(cliente1).gastoTotalIva(0.))
+                .then(Mono.just(cliente1)))
             .map(result -> {
                 try {
                     return ResponseEntity
@@ -244,12 +250,28 @@ public class ClienteResource {
      * {@code GET  /clientes/con-gasto-total-iva} : obtain the total expense with VAT of all the invoices for each client.
      *
      * @return the {@link List} with status {@code 200 (OK)} and with body
-     * the cliente, or with status {@code 404 (Not Found)}.
+     * the clientes, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/clientes/con-gasto-total-iva")
-    public Mono<ClientesGastoTotalConIvaDTO> getClientesAndGastoTotalConIva() {
+    public Mono<ListNombreApellidoGastoTotalConIvaDTO> getClientesAndGastoTotalConIva() {
         log.debug("REST request to get Cliente with Gasto Total with IVA");
-        return clienteService.GetClientesGastoTotalConIvaService();
+        ListNombreApellidoGastoTotalConIvaDTO r = new ListNombreApellidoGastoTotalConIvaDTO();
+        return clienteService.getClientesGastoTotalConIvaService()
+            .collectList()
+            .doOnSuccess(r::setClientes)
+            .then(Mono.just(r));
+    }
+
+    /**
+     * {@code PUT  /clientes/con-gasto-total-iva} : update gasto total iva.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the new
+     * sum of gasto total iva client in body.
+     */
+    @PutMapping("/clientes/con-gasto-total-iva")
+    public Mono<GastoTotalConIvaDTO> getClientesAndGastoTotalConIva(@RequestBody GastoTotalConIvaDTO gastoTotalConIvaDTO) {
+        log.debug("REST request to inform a new expense from client id {}", gastoTotalConIvaDTO.getClienteId());
+        return clienteService.sumGastoTotalIva(gastoTotalConIvaDTO);
     }
 
     /**
