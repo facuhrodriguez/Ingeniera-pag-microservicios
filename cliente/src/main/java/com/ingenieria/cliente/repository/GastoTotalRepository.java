@@ -1,6 +1,6 @@
 package com.ingenieria.cliente.repository;
 
-import com.ingenieria.cliente.domain.GastoTotalIva;
+import com.ingenieria.cliente.domain.GastoTotal;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
@@ -10,6 +10,6 @@ import reactor.core.publisher.Mono;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface GastoConIvaRepository extends ReactiveMongoRepository<GastoTotalIva, String> {
-    Mono<GastoTotalIva> findGastoTotalIvaByCliente_Id(String clienteId);
+public interface GastoTotalRepository extends ReactiveMongoRepository<GastoTotal, String> {
+    Mono<GastoTotal> findGastoTotalByCliente_Id(String clienteId);
 }
