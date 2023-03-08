@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Document(collection = "gasto_total_iva")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class GastoTotalIva implements Serializable {
+public class GastoTotal implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -18,6 +18,9 @@ public class GastoTotalIva implements Serializable {
     @Field("gasto_total_iva")
     private Double gasto_total_iva;
 
+    @Field("cant_facturas")
+    private Long cant_facturas;
+
     @Field("cliente")
     private Cliente cliente;
 
@@ -25,7 +28,7 @@ public class GastoTotalIva implements Serializable {
         return this.id;
     }
 
-    public GastoTotalIva id(String id) {
+    public GastoTotal id(String id) {
         this.setId(id);
         return this;
     }
@@ -42,7 +45,7 @@ public class GastoTotalIva implements Serializable {
         this.cliente = cliente;
     }
 
-    public GastoTotalIva cliente(Cliente cliente) {
+    public GastoTotal cliente(Cliente cliente) {
         this.setCliente(cliente);
         return this;
     }
@@ -51,12 +54,25 @@ public class GastoTotalIva implements Serializable {
         return this.gasto_total_iva;
     }
 
-    public GastoTotalIva gastoTotalIva(Double gastoTotalIva) {
+    public GastoTotal gastoTotalIva(Double gastoTotalIva) {
         this.setGastoTotalIva(gastoTotalIva);
         return this;
     }
 
     public void setGastoTotalIva(Double gastoTotalIva) {
         this.gasto_total_iva = gastoTotalIva;
+    }
+
+    public Long getCantFacturas() {
+        return this.cant_facturas;
+    }
+
+    public GastoTotal cantFacturas(Long cantFacturas) {
+        this.setCantFacturas(cantFacturas);
+        return this;
+    }
+
+    public void setCantFacturas(Long cantFacturas) {
+        this.cant_facturas = cantFacturas;
     }
 }

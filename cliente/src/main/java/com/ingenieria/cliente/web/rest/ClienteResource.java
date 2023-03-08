@@ -1,10 +1,11 @@
 package com.ingenieria.cliente.web.rest;
 
 import com.ingenieria.cliente.domain.Cliente;
-import com.ingenieria.cliente.domain.GastoTotalIva;
+import com.ingenieria.cliente.domain.GastoTotal;
 import com.ingenieria.cliente.repository.ClienteRepository;
-import com.ingenieria.cliente.repository.GastoConIvaRepository;
+import com.ingenieria.cliente.repository.GastoTotalRepository;
 import com.ingenieria.cliente.service.ClienteService;
+import com.ingenieria.cliente.service.dto.getcantfacturas.ClienteCantFacturasDTO;
 import com.ingenieria.cliente.service.dto.getclientes.IdClienteListDTO;
 import com.ingenieria.cliente.service.dto.getgastototalconiva.GastoTotalConIvaDTO;
 import com.ingenieria.cliente.service.dto.getgastototalconiva.ListNombreApellidoGastoTotalConIvaDTO;
@@ -42,12 +43,12 @@ public class ClienteResource {
 
     private final ClienteService clienteService;
     private final ClienteRepository clienteRepository;
-    private final GastoConIvaRepository gastoConIvaRepository;
+    private final GastoTotalRepository gastoTotalRepository;
 
-    public ClienteResource(ClienteService clienteService, ClienteRepository clienteRepository, GastoConIvaRepository gastoConIvaRepository) {
+    public ClienteResource(ClienteService clienteService, ClienteRepository clienteRepository, GastoTotalRepository gastoTotalRepository) {
         this.clienteService = clienteService;
         this.clienteRepository = clienteRepository;
-        this.gastoConIvaRepository = gastoConIvaRepository;
+        this.gastoTotalRepository = gastoTotalRepository;
     }
 
     /**
@@ -64,7 +65,7 @@ public class ClienteResource {
         }
         return clienteRepository
             .save(cliente)
-            .flatMap(cliente1 -> gastoConIvaRepository.save(new GastoTotalIva().cliente(cliente1).gastoTotalIva(0.))
+            .flatMap(cliente1 -> gastoTotalRepository.save(new GastoTotal().cliente(cliente1).gastoTotalIva(0.).cantFacturas(0L))
                 .then(Mono.just(cliente1)))
             .map(result -> {
                 try {
@@ -284,6 +285,18 @@ public class ClienteResource {
     public Flux<Cliente> getClientsWithoutFacturas() {
         log.debug("REST request to get Cliente without Facturas");
         return clienteService.getClientsWithoutFacturas();
+    }
+
+    /**
+     * {@code GET  /clientes/cant-facturas} : get all the clients with total facturas.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list
+     * of clients in body.
+     */
+    @GetMapping("/clientes/cant-facturas")
+    public Flux<ClienteCantFacturasDTO> getClientsCantFacturas() {
+        log.debug("REST request to get Cliente with total Facturas");
+        return clienteService.getClientsCantFacturas();
     }
 
 }
